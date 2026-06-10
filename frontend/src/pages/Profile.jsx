@@ -1,13 +1,18 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, ExternalLink, Building2, Award, Users, Shield, Mail, Phone, Eye, EyeOff } from "lucide-react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, MapPin, ExternalLink, Building2, Award, Users, Shield, Mail, Phone, LogOut } from "lucide-react";
 import { alumni } from "../data/mockData";
 import { serif, mono, catBadge, avatarBg } from "../theme";
+import { useAuth } from "../context/AuthContext";
 
 export default function Profile() {
   const { id } = useParams();
   const a = alumni.find(x => x.id === Number(id));
   const [adminOpen, setAdminOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => { logout(); navigate("/login"); };
 
   if (!a) return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -64,12 +69,27 @@ export default function Profile() {
                 style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: "rgba(255,255,255,0.35)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", letterSpacing: "0.06em" }}>
                 <ExternalLink style={{ width: 10, height: 10 }} /> LINKEDIN
               </a>
-              {/* Admin toggle */}
-              <button onClick={() => setAdminOpen(v => !v)}
-                title={adminOpen ? "Hide admin panel" : "Show admin panel"}
-                style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: adminOpen ? "var(--amber)" : "rgba(255,255,255,0.35)", background: adminOpen ? "rgba(194,119,46,0.12)" : "none", border: "1px solid", borderColor: adminOpen ? "rgba(194,119,46,0.4)" : "rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", cursor: "pointer", letterSpacing: "0.06em" }}>
-                <Shield style={{ width: 10, height: 10 }} /> ADMIN
-              </button>
+              {/* Admin toggle — alumni only */}
+              {user?.role === "alumni" && (
+                <button onClick={() => setAdminOpen(v => !v)}
+                  title={adminOpen ? "Hide admin panel" : "Show admin panel"}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: adminOpen ? "var(--amber)" : "rgba(255,255,255,0.35)", background: adminOpen ? "rgba(194,119,46,0.12)" : "none", border: "1px solid", borderColor: adminOpen ? "rgba(194,119,46,0.4)" : "rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", cursor: "pointer", letterSpacing: "0.06em" }}>
+                  <Shield style={{ width: 10, height: 10 }} /> ADMIN
+                </button>
+              )}
+              {/* Sign out */}
+              {user && (
+                <button onClick={handleLogout}
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: "rgba(255,255,255,0.35)", background: "none", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", cursor: "pointer", letterSpacing: "0.06em" }}>
+                  <LogOut style={{ width: 10, height: 10 }} /> SIGN OUT
+                </button>
+              )}
+              {!user && (
+                <Link to="/login"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: "rgba(255,255,255,0.55)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 3, padding: "5px 10px", letterSpacing: "0.06em" }}>
+                  SIGN IN
+                </Link>
+              )}
             </div>
           </div>
 

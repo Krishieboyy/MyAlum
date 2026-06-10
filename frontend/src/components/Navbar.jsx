@@ -1,7 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
-import { Bell } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Bell, LogOut, User, ChevronDown } from "lucide-react";
 import { serif, mono } from "../theme";
-import { alumni } from "../data/mockData";
+import { useAuth } from "../context/AuthContext";
 
 const links = [
   { to: "/",           label: "Home"       },
@@ -10,10 +11,25 @@ const links = [
   { to: "/placements", label: "Placements" },
 ];
 
-const currentUser = alumni[0];
-
 export default function Navbar() {
-  const { pathname } = useLocation();
+  const { pathname }       = useLocation();
+  const navigate           = useNavigate();
+  const { user, logout }   = useAuth();
+  const [open, setOpen]    = useState(false);
+  const dropRef            = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => { if (dropRef.current && !dropRef.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleLogout = () => {
+    setOpen(false);
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav style={{ background: "var(--blue)", borderBottom: "1px solid rgba(255,255,255,0.08)", position: "sticky", top: 0, zIndex: 50 }}>
@@ -40,25 +56,78 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Right — bell + profile icon */}
+        {/* Right side */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,255,255,0.35)", position: "relative", display: "flex" }}>
-            <Bell style={{ width: 15, height: 15 }} />
-            <span style={{ position: "absolute", top: 5, right: 5, width: 5, height: 5, borderRadius: "50%", background: "var(--amber)" }} />
-          </button>
 
-          {/* Profile icon → links to own profile */}
-          <Link to={`/profile/${currentUser.id}`}
-            style={{ display: "flex", alignItems: "center", gap: 9, borderLeft: "1px solid rgba(255,255,255,0.12)", paddingLeft: 14, textDecoration: "none" }}>
-            <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.22)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 600, flexShrink: 0, transition: "border-color 120ms" }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)"}
-              onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)"}>
-              {currentUser.avatar}
-            </div>
-            <span style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: "0.06em" }}>
-              {currentUser.name.split(" ")[0].toUpperCase()} · CSE·14
-            </span>
-          </Link>
+          {user ? (
+            <>
+              {/* Bell */}
+              <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,255,255,0.35)", position: "relative", display: "flex" }}>
+                <Bell style={{ width: 15, height: 15 }} />
+                <span style={{ position: "absolute", top: 5, right: 5, width: 5, height: 5, borderRadius: "50%", background: "var(--amber)" }} />
+              </button>
+
+              {/* Profile dropdown */}
+              <div ref={dropRef} style={{ position: "relative", borderLeft: "1px solid rgba(255,255,255,0.12)", paddingLeft: 14 }}>
+                <button onClick={() => setOpen(v => !v)}
+                  style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                  {/* Avatar */}
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: `1px solid ${open ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.22)"}`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 600, flexShrink: 0, transition: "border-color 120ms" }}>
+                    {user.avatar}
+                  </div>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.55)", letterSpacing: "0.06em", lineHeight: 1.2 }}>
+                      {user.name.split(" ")[0].toUpperCase()} · {user.badge}
+                    </div>
+                    <div style={{ ...mono, fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                      {user.role}
+                    </div>
+                  </div>
+                  <ChevronDown style={{ width: 11, height: 11, color: "rgba(255,255,255,0.3)", transform: open ? "rotate(180deg)" : "none", transition: "transform 150ms" }} />
+                </button>
+
+                {/* Dropdown menu */}
+                {open && (
+                  <div style={{ position: "absolute", right: 0, top: "calc(100% + 10px)", background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, minWidth: 180, boxShadow: "0 4px 16px rgba(0,0,0,0.08)", overflow: "hidden", zIndex: 100 }}>
+
+                    {/* User info row */}
+                    <div style={{ padding: "12px 14px", borderBottom: "1px solid var(--rule)", background: "var(--paper)" }}>
+                      <div style={{ fontSize: 13, fontWeight: 500, color: "var(--ink)", marginBottom: 2 }}>{user.name}</div>
+                      <div style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.06em", textTransform: "uppercase" }}>{user.role} · {user.badge}</div>
+                    </div>
+
+                    {/* My profile — both roles */}
+                    <Link
+                      to={user.role === "alumni" ? `/profile/${user.alumniId}` : "/student-profile"}
+                      onClick={() => setOpen(false)}
+                      style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", textDecoration: "none", color: "var(--ink)", fontSize: 13, borderBottom: "1px solid var(--rule)", transition: "background 120ms" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "var(--paper)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                      <User style={{ width: 12, height: 12, color: "var(--sub)" }} />
+                      My profile
+                    </Link>
+
+                    {/* Sign out */}
+                    <button onClick={handleLogout}
+                      style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", width: "100%", background: "none", border: "none", cursor: "pointer", color: "var(--red)", fontSize: 13, textAlign: "left", transition: "background 120ms" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "#FFF5F5"}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                      <LogOut style={{ width: 12, height: 12 }} />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            /* Not logged in */
+            <Link to="/login"
+              style={{ display: "flex", alignItems: "center", gap: 6, ...mono, fontSize: 10.5, color: "rgba(255,255,255,0.6)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 3, padding: "6px 14px", letterSpacing: "0.06em", transition: "border-color 150ms, color 150ms" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.45)"; e.currentTarget.style.color = "#fff"; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}>
+              SIGN IN
+            </Link>
+          )}
         </div>
       </div>
     </nav>
