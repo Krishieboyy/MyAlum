@@ -1,137 +1,109 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Search, ArrowRight, Users, Globe, Building2, Rocket } from "lucide-react";
-import { alumni } from "../data/mockData";
-import AlumniCard from "../components/AlumniCard";
-import { serif, mono, T, catBadge, avatarBg } from "../theme";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import { news, alumni } from "../data/mockData";
+import { serif, mono, avatarBg } from "../theme";
+
+const TAG_COLOR = {
+  RECOGNITION: ["#EEF2F8", "#1B3A66", "#B8C8DF"],
+  FUNDING:     ["#EDFAF3", "#2E7D5B", "#9ACFB8"],
+  AWARD:       ["#FDF6EE", "#C2772E", "#E8C89A"],
+  ACHIEVEMENT: ["#EEF2F8", "#1B3A66", "#B8C8DF"],
+  BUSINESS:    ["#FDF6EE", "#C2772E", "#E8C89A"],
+  POLICY:      ["#EDFAF3", "#2E7D5B", "#9ACFB8"],
+};
+function tagStyle(tag) {
+  const [bg, color, border] = TAG_COLOR[tag] || ["#F5F5F4", "#6B6963", "#E4E1DA"];
+  return { background: bg, color, borderColor: border };
+}
+
+function NewsCard({ item, large = false }) {
+  const ts  = tagStyle(item.tag);
+  const alum = alumni.find(a => a.id === item.alumniId) || {};
+  return (
+    <Link to={`/profile/${item.alumniId}`} className="record-card" style={{ display: "flex", flexDirection: "column", height: "100%", textDecoration: "none" }}>
+      <div style={{ padding: large ? "22px 24px 20px" : "16px 18px 14px", flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: large ? 14 : 10 }}>
+          <span className="badge" style={{ ...ts, fontSize: 9 }}>{item.tag}</span>
+          <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.06em" }}>{item.kicker}</span>
+          <span style={{ ...mono, fontSize: 10, color: "var(--rule)" }}>·</span>
+          <span style={{ ...mono, fontSize: 10, color: "var(--sub)" }}>
+            {new Date(item.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+          </span>
+        </div>
+        <h2 style={{ ...serif, fontSize: large ? 22 : 15, fontWeight: 500, color: "var(--ink)", margin: "0 0 10px", letterSpacing: "-0.02em", lineHeight: 1.2, maxWidth: large ? 500 : undefined }}>
+          {item.headline}
+        </h2>
+        <p style={{ fontSize: large ? 13 : 12.5, color: "var(--sub)", lineHeight: 1.75, margin: 0 }}>
+          {item.excerpt}
+        </p>
+      </div>
+      <div className="rule" />
+      <div style={{ padding: "8px 18px", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ width: 20, height: 20, borderRadius: "50%", background: avatarBg(alum.category || ""), display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 7.5, fontWeight: 600, flexShrink: 0 }}>
+          {alum.avatar || "??"}
+        </div>
+        <span style={{ ...mono, fontSize: 10.5, color: "var(--sub)" }}>{item.alumniName} · {item.alumniBatch}</span>
+        <ArrowRight style={{ width: 10, height: 10, color: "var(--rule)", marginLeft: "auto" }} />
+      </div>
+    </Link>
+  );
+}
 
 export default function Home() {
-  const [q, setQ] = useState("");
-  const navigate = useNavigate();
+  const featured = news.find(n => n.featured);
+  const rest     = news.filter(n => !n.featured);
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px" }}>
 
-      {/* ── Hero ── */}
-      <div style={{ background: "var(--blue)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "60px 24px 56px" }}>
-          <div style={{ maxWidth: 560 }}>
-
-            {/* Version pill */}
-
-            <h1 style={{ ...serif, fontSize: "clamp(30px, 4vw, 44px)", fontWeight: 500, color: "#fff", letterSpacing: "-0.025em", lineHeight: 1.12, margin: "0 0 16px" }}>
-              12,400 IITGians.<br />One database.
-            </h1>
-
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.5)", lineHeight: 1.75, margin: "0 0 32px", maxWidth: 400 }}>
-              Find alumni by batch, branch, company, or city.
-              Connect with founders, researchers, civil servants, and professors.
-            </p>
-
-            {/* Search */}
-            <form onSubmit={e => { e.preventDefault(); navigate(`/directory?q=${encodeURIComponent(q)}`); }}
-              style={{ display: "flex", maxWidth: 480, marginBottom: 16 }}>
-              <div style={{ flex: 1, display: "flex", alignItems: "center", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.15)", borderRight: "none", borderRadius: "3px 0 0 3px", padding: "0 14px" }}>
-                <Search style={{ width: 13, height: 13, color: "rgba(255,255,255,0.3)", flexShrink: 0 }} />
-                <input value={q} onChange={e => setQ(e.target.value)}
-                  placeholder="name, batch, company, branch…"
-                  style={{ flex: 1, background: "none", border: "none", outline: "none", color: "#fff", fontSize: 13, padding: "11px 10px", caretColor: "var(--amber)" }}
-                />
-              </div>
-              <button type="submit" style={{ background: "var(--amber)", color: "#fff", border: "none", borderRadius: "0 3px 3px 0", padding: "0 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", letterSpacing: "0.02em" }}>
-                Search
-              </button>
-            </form>
-
-            {/* Quick filters */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {["CSE 2014", "Founders", "NRI Alumni", "Researchers", "Govt Officers"].map(tag => (
-                <button key={tag}
-                  onClick={() => navigate(`/directory?q=${encodeURIComponent(tag)}`)}
-                  style={{ ...mono, background: "none", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 3, padding: "3px 9px", fontSize: 10.5, color: "rgba(255,255,255,0.38)", cursor: "pointer", letterSpacing: "0.04em", transition: "border-color 120ms, color 120ms" }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.35)"; e.currentTarget.style.color = "rgba(255,255,255,0.65)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"; e.currentTarget.style.color = "rgba(255,255,255,0.38)"; }}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 6 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+            <h1 style={{ ...serif, fontSize: 20, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>Alumni updates</h1>
+            <span style={{ ...mono, fontSize: 10.5, color: "var(--sub)" }}>— IIT Guwahati</span>
           </div>
+          <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.06em" }}>
+            {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }).toUpperCase()}
+          </span>
         </div>
-      </div>
-
-      {/* ── Stats strip ── */}
-      <div style={{ background: "var(--surface)", borderBottom: "1px solid var(--rule)" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", display: "grid", gridTemplateColumns: "repeat(4,1fr)" }}>
-          {[
-            { n: "12,400+", l: "Alumni registered", icon: Users },
-            { n: "48",      l: "Countries",          icon: Globe },
-            { n: "3,200+", l: "Companies",           icon: Building2 },
-            { n: "620",    l: "Founders & CEOs",     icon: Rocket },
-          ].map(({ n, l, icon: Icon }, i) => (
-            <div key={l} style={{ padding: "20px 0", paddingLeft: i > 0 ? 28 : 0, borderRight: i < 3 ? "1px solid var(--rule)" : "none", display: "flex", alignItems: "center", gap: 12 }}>
-              <Icon style={{ width: 14, height: 14, color: "var(--blue)", flexShrink: 0, opacity: 0.7 }} />
-              <div>
-                <div style={{ ...mono, fontSize: 22, fontWeight: 500, color: "var(--ink)", lineHeight: 1, letterSpacing: "-0.02em" }}>{n}</div>
-                <div style={{ fontSize: 11.5, color: "var(--sub)", marginTop: 3 }}>{l}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Featured alumni — editorial ── */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "44px 24px" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
-            <h2 style={{ ...serif, fontSize: 22, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
-              Alumni spotlight
-            </h2>
-            <span style={{ fontSize: 12, color: "var(--sub)" }}>— selected from the community</span>
-          </div>
-          <Link to="/directory" style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--blue)", textDecoration: "none", fontWeight: 500 }}>
-            Full directory <ArrowRight style={{ width: 13, height: 13 }} />
-          </Link>
-        </div>
-
-        {/* Hairline under heading */}
         <div className="rule" style={{ marginBottom: 24 }} />
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
-          {alumni.slice(0, 3).map(a => <AlumniCard key={a.id} alumni={a} />)}
-        </div>
-      </div>
-
-      {/* ── Platform features — text grid on dotted bg ── */}
-      <div style={{ borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)" }}>
-        <div className="dotted-grid" style={{ padding: "2px 0" }}>
-          <div style={{ background: "var(--surface)", maxWidth: 1200, margin: "0 auto", borderLeft: "1px solid var(--rule)", borderRight: "1px solid var(--rule)" }}>
-            <div style={{ padding: "36px 24px 12px" }}>
-              <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase" }}>Platform features</span>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }}>
-              {[
-                { title: "Search & filter",     desc: "Batch, branch, company, city, category, NRI status. Public access for basic info." },
-                { title: "Admin enrichment",    desc: "Pull verified emails and phone numbers for selected alumni. Admin-only, never public." },
-                { title: "Full profiles",       desc: "Complete work history, education, campus activities, achievements — all linked." },
-                { title: "Global coverage",     desc: "NRI flag, current city and country tracked. Alumni across 48 countries." },
-                { title: "Campus data",         desc: "Techniche, Alcheringa, clubs — all campus activity linked to each profile." },
-                { title: "Outreach & events",   desc: "Batch-specific invites, donation requests, and campus updates pushed directly." },
-              ].map(({ title, desc }, i) => (
-                <div key={title} style={{ padding: "20px 24px 24px", borderRight: (i % 3 < 2) ? "1px solid var(--rule)" : "none", borderBottom: i < 3 ? "1px solid var(--rule)" : "none" }}>
-                  <div style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink)", marginBottom: 6 }}>{title}</div>
-                  <div style={{ fontSize: 12.5, color: "var(--sub)", lineHeight: 1.7 }}>{desc}</div>
-                </div>
-              ))}
-            </div>
+        {/* Featured story */}
+        {featured && (
+          <div style={{ marginBottom: 14 }}>
+            <NewsCard item={featured} large />
           </div>
-        </div>
-      </div>
+        )}
 
-      {/* ── Footer ── */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: 12, color: "var(--sub)" }}>MyAlum · IIT Guwahati Alumni Association</span>
-        <span style={{ ...mono, fontSize: 10.5, color: "var(--rule)", letterSpacing: "0.06em" }}>© 2025</span>
+        {/* 3-col grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 40 }}>
+          {rest.map(item => <NewsCard key={item.id} item={item} />)}
+        </div>
+
+        {/* Divider */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+          <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", flexShrink: 0 }}>MORE FROM THE NETWORK</span>
+          <div className="rule" style={{ flex: 1 }} />
+        </div>
+
+        {/* Nav tiles */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
+          {[
+            { to: "/directory",  label: "Alumni directory", sub: "12,400+ profiles · search & filter",             kicker: "DATABASE" },
+            { to: "/resources",  label: "Resources",        sub: "Notes, guides & prep material from seniors",      kicker: "SENIORS → JUNIORS" },
+            { to: "/placements", label: "Placements",       sub: "Internship & job referrals posted by alumni",     kicker: "OPPORTUNITIES" },
+          ].map(({ to, label, sub, kicker }) => (
+            <Link key={to} to={to} className="record-card" style={{ padding: "18px 20px", textDecoration: "none" }}>
+              <span style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: 8 }}>{kicker}</span>
+              <p style={{ ...serif, fontSize: 16, fontWeight: 500, color: "var(--ink)", margin: "0 0 5px", letterSpacing: "-0.01em" }}>{label}</p>
+              <p style={{ fontSize: 12, color: "var(--sub)", margin: "0 0 12px", lineHeight: 1.5 }}>{sub}</p>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--blue)", fontWeight: 500 }}>
+                Open <ArrowRight style={{ width: 11, height: 11 }} />
+              </span>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

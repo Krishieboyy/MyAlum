@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, ExternalLink, Building2, Award, Users } from "lucide-react";
+import { ArrowLeft, MapPin, ExternalLink, Building2, Award, Users, Shield, Mail, Phone, Eye, EyeOff } from "lucide-react";
 import { alumni } from "../data/mockData";
 import { serif, mono, catBadge, avatarBg } from "../theme";
 
 export default function Profile() {
   const { id } = useParams();
   const a = alumni.find(x => x.id === Number(id));
+  const [adminOpen, setAdminOpen] = useState(false);
 
   if (!a) return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -56,41 +58,84 @@ export default function Profile() {
               </p>
             </div>
 
-            <a href={a.linkedinUrl} target="_blank" rel="noopener noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: "rgba(255,255,255,0.35)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", flexShrink: 0, letterSpacing: "0.06em" }}>
-              <ExternalLink style={{ width: 10, height: 10 }} /> LINKEDIN
-            </a>
+            {/* Right actions */}
+            <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+              <a href={a.linkedinUrl} target="_blank" rel="noopener noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: "rgba(255,255,255,0.35)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", letterSpacing: "0.06em" }}>
+                <ExternalLink style={{ width: 10, height: 10 }} /> LINKEDIN
+              </a>
+              {/* Admin toggle */}
+              <button onClick={() => setAdminOpen(v => !v)}
+                title={adminOpen ? "Hide admin panel" : "Show admin panel"}
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, ...mono, fontSize: 10, color: adminOpen ? "var(--amber)" : "rgba(255,255,255,0.35)", background: adminOpen ? "rgba(194,119,46,0.12)" : "none", border: "1px solid", borderColor: adminOpen ? "rgba(194,119,46,0.4)" : "rgba(255,255,255,0.12)", borderRadius: 3, padding: "5px 10px", cursor: "pointer", letterSpacing: "0.06em" }}>
+                <Shield style={{ width: 10, height: 10 }} /> ADMIN
+              </button>
+            </div>
           </div>
 
           {/* Metadata grid */}
           <div style={{ padding: "16px 28px", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "12px 0", borderBottom: "1px solid var(--rule)" }}>
             <Field label="Card No." value={a.alumniCardId} />
-            <Field label="Course" value={a.course} />
-            <Field label="Branch" value={a.branch.split(" ").map(w => w[0]).join("").slice(0, 4)} />
-            <Field label="Batch" value={`${a.startYear}–${a.endYear}`} />
+            <Field label="Course"   value={a.course} />
+            <Field label="Branch"   value={a.branch.split(" ").map(w => w[0]).join("").slice(0, 4)} />
+            <Field label="Batch"    value={`${a.startYear}–${a.endYear}`} />
             <Field label="Location" value={a.currentCity} />
-            <Field label="Status" value={a.isNRI ? "NRI · Abroad" : "India"} />
+            <Field label="Status"   value={a.isNRI ? "NRI · Abroad" : "India"} />
           </div>
 
           {/* Bio */}
-          <div style={{ padding: "16px 28px 18px" }}>
+          <div style={{ padding: "14px 28px 16px" }}>
             <p style={{ fontSize: 13, color: "var(--sub)", lineHeight: 1.75, margin: 0, maxWidth: 620 }}>{a.bio}</p>
           </div>
+
+          {/* ── Admin panel (inline, toggled) ── */}
+          {adminOpen && (
+            <div style={{ borderTop: "1px solid var(--rule)", background: "#FFFDF8" }}>
+              <div style={{ padding: "12px 28px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
+                <Shield style={{ width: 11, height: 11, color: "var(--amber)" }} />
+                <span style={{ ...mono, fontSize: 10, color: "var(--amber)", letterSpacing: "0.08em" }}>ADMIN VIEW · CONTACT DATA</span>
+              </div>
+              <div style={{ padding: "16px 28px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+                <div>
+                  <span style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Alumni email</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 7, ...mono, fontSize: 12, color: "var(--ink)" }}>
+                    <Mail style={{ width: 11, height: 11, color: "var(--sub)" }} /> {a.alumniEmailId}
+                  </span>
+                </div>
+                <div>
+                  <span style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Work email</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 7, ...mono, fontSize: 12, color: "var(--ink)" }}>
+                    <Mail style={{ width: 11, height: 11, color: "var(--sub)" }} />
+                    {a.emailAddresses[0] || "—"}
+                  </span>
+                </div>
+                <div>
+                  <span style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Phone</span>
+                  <span style={{ display: "flex", alignItems: "center", gap: 7, ...mono, fontSize: 12, color: "var(--sub)" }}>
+                    <Phone style={{ width: 11, height: 11 }} /> {a.phoneNumbers[0] || "Not on record"}
+                  </span>
+                </div>
+              </div>
+              <div style={{ padding: "0 28px 14px" }}>
+                <span style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.06em" }}>Access logged · visible to admin-role only</span>
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* ── Body grid ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 290px", gap: 12 }}>
 
-          {/* ── Left: Career + achievements ── */}
+          {/* Left: career + achievements */}
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
-            {/* Career timeline */}
             <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
               <div style={{ padding: "12px 20px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
                 <Building2 style={{ width: 12, height: 12, color: "var(--sub)" }} />
                 <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)" }}>Career history</span>
               </div>
 
-              {/* Current role */}
+              {/* Current */}
               <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--rule)", display: "flex", gap: 14 }}>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, paddingTop: 3 }}>
                   <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)" }} />
@@ -108,7 +153,6 @@ export default function Profile() {
                 </div>
               </div>
 
-              {/* Past companies */}
               {a.pastCompanies.map((company, i) => (
                 <div key={company} style={{ padding: "14px 20px", borderBottom: i < a.pastCompanies.length - 1 ? "1px solid var(--rule)" : "none", display: "flex", gap: 14 }}>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, paddingTop: 3 }}>
@@ -123,7 +167,6 @@ export default function Profile() {
               ))}
             </div>
 
-            {/* Achievements */}
             {a.achievements.length > 0 && (
               <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
                 <div style={{ padding: "12px 20px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
@@ -140,10 +183,9 @@ export default function Profile() {
             )}
           </div>
 
-          {/* ── Right sidebar ── */}
+          {/* Right sidebar */}
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
 
-            {/* Campus record */}
             <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
               <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
                 <Users style={{ width: 12, height: 12, color: "var(--sub)" }} />
@@ -161,18 +203,10 @@ export default function Profile() {
               ))}
             </div>
 
-            {/* Contact (gated) */}
-            <div className="dotted-grid" style={{ border: "1px solid var(--rule)", borderRadius: 3, padding: "20px 16px", textAlign: "center" }}>
-              <p style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.1em", margin: "0 0 5px", textTransform: "uppercase" }}>Contact details</p>
-              <p style={{ fontSize: 12, color: "var(--sub)", margin: "0 0 10px", lineHeight: 1.5 }}>Available to admin users only</p>
-              <Link to="/admin" style={{ ...mono, fontSize: 10, color: "var(--blue)", textDecoration: "none", letterSpacing: "0.06em" }}>REQUEST ACCESS →</Link>
-            </div>
-
-            {/* Location track */}
             <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, padding: "14px 16px" }}>
               <div style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>Location history</div>
               {[a.currentCity, ...a.pastCities].map((city, i) => (
-                <div key={city + i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: i < (a.pastCities.length) ? 7 : 0 }}>
+                <div key={city + i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: i < a.pastCities.length ? 7 : 0 }}>
                   <MapPin style={{ width: 10, height: 10, color: i === 0 ? "var(--green)" : "var(--rule)", flexShrink: 0 }} />
                   <span style={{ ...mono, fontSize: 11, color: i === 0 ? "var(--ink)" : "var(--sub)" }}>{city}</span>
                   {i === 0 && <span style={{ ...mono, fontSize: 9, color: "var(--green)", marginLeft: "auto", letterSpacing: "0.08em" }}>NOW</span>}

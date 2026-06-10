@@ -3,20 +3,20 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Directory from "./pages/Directory";
 import Profile from "./pages/Profile";
-import Dashboard from "./pages/Dashboard";
-import Admin from "./pages/Admin";
+import Resources from "./pages/Resources";
+import Placements from "./pages/Placements";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
+      <div style={{ background: "var(--paper)" }}>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/directory" element={<Directory />} />
+          <Route path="/"           element={<Home />} />
+          <Route path="/directory"  element={<Directory />} />
           <Route path="/profile/:id" element={<Profile />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/resources"  element={<Resources />} />
+          <Route path="/placements" element={<Placements />} />
         </Routes>
       </div>
     </BrowserRouter>
