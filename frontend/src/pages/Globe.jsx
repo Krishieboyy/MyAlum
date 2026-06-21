@@ -364,7 +364,7 @@ export default function GlobePage() {
               borderRadius: 6,
               padding: "10px 14px",
               fontSize: 11,
-              color: "var(--sub)",
+              color: "#94a3b8",
               pointerEvents: "none",
               display: "flex",
               flexDirection: "column",
@@ -372,7 +372,7 @@ export default function GlobePage() {
               backdropFilter: "blur(6px)",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)"
             }}>
-              <span style={{ fontWeight: 600, color: "var(--ink)", marginBottom: 2 }}>🌐 CONTROLS & HUD</span>
+              <span style={{ fontWeight: 600, color: "#f1f5f9", marginBottom: 2 }}>🌐 CONTROLS & HUD</span>
               <span>🖱️ Drag mouse to rotate globe</span>
               <span>📜 Scroll mouse wheel to zoom</span>
               <span>🔴 Hover on spikes for info · Click to expand</span>
@@ -383,12 +383,12 @@ export default function GlobePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
             {/* Filter Toggle Panel */}
-            <div style={{
+             <div style={{
               background: "var(--surface)",
               border: "1px solid var(--rule)",
               borderRadius: 8,
               padding: 16,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)"
+              boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04), 0 1px 2px 0 rgba(0,0,0,0.02)"
             }}>
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -434,7 +434,7 @@ export default function GlobePage() {
                       }}
                     >
                       {uniqueBatches.map(batch => (
-                        <option key={batch} value={batch} style={{ background: "#0f172a" }}>
+                        <option key={batch} value={batch}>
                           {batch === "all" ? "All Batches" : batch}
                         </option>
                       ))}
@@ -459,9 +459,9 @@ export default function GlobePage() {
                         outline: "none"
                       }}
                     >
-                      <option value="all" style={{ background: "#0f172a" }}>All Branches</option>
+                      <option value="all">All Branches</option>
                       {branches.map(branch => (
-                        <option key={branch} value={branch} style={{ background: "#0f172a" }}>{branch}</option>
+                        <option key={branch} value={branch}>{branch}</option>
                       ))}
                     </select>
                   </div>
@@ -485,7 +485,7 @@ export default function GlobePage() {
                       }}
                     >
                       {uniqueCountries.map(country => (
-                        <option key={country} value={country} style={{ background: "#0f172a" }}>
+                        <option key={country} value={country}>
                           {country === "all" ? "All Countries" : country}
                         </option>
                       ))}
@@ -524,7 +524,7 @@ export default function GlobePage() {
               border: "1px solid var(--rule)",
               borderRadius: 8,
               padding: 16,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)"
+              boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04), 0 1px 2px 0 rgba(0,0,0,0.02)"
             }}>
               <div style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, fontWeight: 600 }}>
                 Global Impact Stats

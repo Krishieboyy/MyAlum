@@ -280,7 +280,7 @@ export default function Dashboard() {
               padding: "16px",
             }}>
               <h3 style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: "0 0 12px" }}>Quick Actions</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {[
                   { label: "Browse Directory", icon: "👥" },
                   { label: "View Resources", icon: "📚" },

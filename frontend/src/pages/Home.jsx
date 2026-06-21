@@ -30,7 +30,7 @@ function NewsCard({ item, large = false }) {
     <div className="record-card" style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
       
       {/* Author Header - Top Position */}
-      <div style={{ padding: "16px 20px 12px", display: "flex", alignItems: "center", gap: 12 }}>
+      <div style={{ padding: "16px 20px 12px", display: "flex", alignItems: "flex-start", gap: 12 }}>
         <Link to={`/profile/${item.alumniId}`} style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", flex: 1, minWidth: 0 }}>
           <div style={{ 
             width: 38, height: 38, borderRadius: "50%", 
