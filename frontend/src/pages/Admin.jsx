@@ -100,7 +100,7 @@ export default function Admin() {
         </div>
 
         {/* Stats Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-7">
           <StatCard icon={Users} label="Total Users" value={stats.totalAlumni.toLocaleString()} color="var(--blue)" />
           <StatCard icon={TrendingUp} label="Active This Month" value="3,240" color="var(--green)" />
           <StatCard icon={AlertCircle} label="Pending Reports" value="12" color="var(--amber)" />
@@ -172,7 +172,7 @@ export default function Admin() {
               background: "var(--surface)",
               border: "1px solid var(--rule)",
               borderRadius: 6,
-              overflow: "hidden",
+              overflowX: "auto",
             }}>
               <div style={{
                 display: "grid",
@@ -186,6 +186,7 @@ export default function Admin() {
                 color: "var(--sub)",
                 textTransform: "uppercase",
                 letterSpacing: "0.05em",
+                minWidth: 750,
               }}>
                 <div></div>
                 <div>Name</div>
@@ -203,6 +204,7 @@ export default function Admin() {
                   padding: "14px 16px",
                   borderBottom: "1px solid var(--rule)",
                   alignItems: "center",
+                  minWidth: 750,
                 }}>
                   <input
                     type="checkbox"
@@ -270,14 +272,11 @@ export default function Admin() {
 
                   {/* Revealed contact info */}
                   {revealed.has(a.id) && (
-                    <div style={{
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{
                       gridColumn: "1 / -1",
                       padding: "12px",
                       background: "#FFFDF8",
                       borderRadius: 4,
-                      display: "grid",
-                      gridTemplateColumns: "repeat(3, 1fr)",
-                      gap: 16,
                     }}>
                       <div>
                         <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: 4 }}>Alumni Email</span>

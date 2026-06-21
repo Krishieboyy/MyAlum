@@ -4,6 +4,7 @@ import { ArrowLeft, MapPin, ExternalLink, Building2, Award, Users, Shield, Mail,
 import { alumni } from "../data/mockData";
 import { serif, mono, catBadge, avatarBg } from "../theme";
 import { useAuth } from "../context/AuthContext";
+import CompanyLogo from "../components/CompanyLogo";
 
 export default function Profile() {
   const { id } = useParams();
@@ -56,8 +57,8 @@ export default function Profile() {
               
               {/* Avatar - positioned over banner */}
               <div style={{
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 120,
                 borderRadius: "50%",
                 background: avatarBg(a.category),
                 border: "4px solid var(--surface)",
@@ -65,37 +66,60 @@ export default function Profile() {
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#fff",
-                fontSize: 32,
+                fontSize: 38,
                 fontWeight: 600,
-                marginTop: -50,
-                marginBottom: 16,
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                marginTop: -60,
+                marginBottom: 20,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
               }}>
                 {a.avatar}
               </div>
 
-              {/* Name and Title */}
-              <div style={{ marginBottom: 12 }}>
-                <h1 style={{ ...serif, fontSize: 28, fontWeight: 600, color: "var(--ink)", margin: "0 0 4px", letterSpacing: "-0.025em" }}>
-                  {a.name}
-                </h1>
-                <p style={{ fontSize: 15, color: "var(--sub)", margin: 0, lineHeight: 1.5 }}>
-                  {a.currentCompany.position} at {a.currentCompany.name}
-                </p>
-              </div>
+              {/* Name and Professional details in LinkedIn split style */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 24, flexWrap: "wrap", marginBottom: 20 }}>
+                
+                {/* Left Side: Name and Professional Headline */}
+                <div style={{ flex: 1, minWidth: 280 }}>
+                  <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 26, fontWeight: 700, color: "var(--ink)", margin: "0 0 6px", letterSpacing: "-0.015em" }}>
+                    {a.name}
+                  </h1>
+                  <p style={{ fontSize: 16, fontWeight: 500, color: "var(--ink)", margin: "0 0 10px", lineHeight: 1.4 }}>
+                    {a.currentCompany.position} at <span style={{ color: "var(--blue)", fontWeight: 600 }}>{a.currentCompany.name}</span>
+                  </p>
+                  
+                  {/* Location & Quick Meta */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 13.5, color: "var(--sub)", flexWrap: "wrap", marginBottom: 12 }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <MapPin style={{ width: 14, height: 14 }} /> {a.currentCity}, {a.currentCountry}
+                    </span>
+                    <span>·</span>
+                    <span style={{ color: "var(--blue)", fontWeight: 600 }}>Class of {a.endYear}</span>
+                    <span>·</span>
+                    <span>{a.course} in {a.branch.split(" ")[0]}</span>
+                  </div>
+                  
+                  {/* Badges */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <span className="badge" style={badge}>{a.category}</span>
+                    {a.isNRI && <span className="badge" style={{ background: "rgba(59, 130, 246, 0.08)", color: "#1d4ed8", borderColor: "#bfdbfe", fontSize: 9 }}>NRI</span>}
+                  </div>
+                </div>
 
-              {/* Badges and Meta */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-                <span className="badge" style={badge}>{a.category}</span>
-                {a.isNRI && <span className="badge" style={{ background: "rgba(59, 130, 246, 0.1)", color: "#3b82f6", borderColor: "#93c5fd" }}>NRI</span>}
-                <span style={{ fontSize: 13, color: "var(--sub)" }}>
-                  <MapPin style={{ width: 12, height: 12, display: "inline", marginRight: 4 }} />
-                  {a.currentCity}, {a.currentCountry}
-                </span>
+                {/* Right Side: Corporate & Academic Institutions */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", background: "var(--paper)", borderRadius: 6, border: "1px solid var(--rule)" }}>
+                    <CompanyLogo name={a.currentCompany.name} size={15} />
+                    <span>{a.currentCompany.name}</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", background: "var(--paper)", borderRadius: 6, border: "1px solid var(--rule)" }}>
+                    <span style={{ fontSize: 15 }}>🎓</span>
+                    <span>IIT Guwahati</span>
+                  </div>
+                </div>
               </div>
 
               {/* Bio */}
-              <p style={{ fontSize: 14, color: "var(--ink)", lineHeight: 1.8, margin: 0, maxWidth: 600, marginBottom: 16 }}>
+              <p style={{ fontSize: 14.5, color: "var(--ink)", lineHeight: 1.8, margin: "0 0 20px", maxWidth: 700 }}>
                 {a.bio}
               </p>
 
@@ -178,7 +202,7 @@ export default function Profile() {
                   <Shield style={{ width: 14, height: 14, color: "var(--amber)" }} />
                   <span style={{ ...mono, fontSize: 11, color: "var(--amber)", letterSpacing: "0.08em", fontWeight: 500 }}>ADMIN VIEW · CONTACT DATA</span>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", display: "block", marginBottom: 6 }}>Alumni Email</span>
                     <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--ink)" }}>
@@ -221,7 +245,10 @@ export default function Profile() {
                     <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>{a.currentCompany.position}</span>
                     <span className="badge" style={{ background: "#EDFAF3", color: "var(--green)", borderColor: "#9ACFB8", fontSize: 10 }}>CURRENT</span>
                   </div>
-                  <p style={{ fontSize: 13, color: "var(--sub)", margin: "0 0 4px" }}>{a.currentCompany.name}</p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, margin: "2px 0 6px 0" }}>
+                    <CompanyLogo name={a.currentCompany.name} size={13} />
+                    <span style={{ fontSize: 13, color: "var(--sub)", fontWeight: 500 }}>{a.currentCompany.name}</span>
+                  </div>
                   <span style={{ ...mono, fontSize: 11, color: "var(--sub)" }}>
                     {a.currentCompany.startDate.replace("-", " / ")} → present
                   </span>
@@ -238,7 +265,10 @@ export default function Profile() {
                     {i < a.pastCompanies.length - 1 && <div style={{ flex: 1, width: 2, background: "var(--rule)", marginTop: 8, height: 40 }} />}
                   </div>
                   <div>
-                    <p style={{ fontSize: 13, color: "var(--ink)", margin: "0 0 2px", fontWeight: 500 }}>{company}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                      <CompanyLogo name={company} size={13} />
+                      <span style={{ fontSize: 13, color: "var(--ink)", fontWeight: 500 }}>{company}</span>
+                    </div>
                     <span style={{ ...mono, fontSize: 11, color: "var(--sub)" }}>past employer</span>
                   </div>
                 </div>

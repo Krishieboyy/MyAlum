@@ -38,19 +38,38 @@ export default function Navbar() {
 
         {/* Wordmark */}
         <Link to="/" style={{ display: "flex", alignItems: "baseline", gap: 10, textDecoration: "none", marginRight: 40, flexShrink: 0 }}>
-          <span style={{ ...serif, fontSize: 17, fontWeight: 500, color: "#fff", letterSpacing: "-0.01em" }}>MyAlum</span>
-          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 14 }}>·</span>
-          <span style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: "0.1em" }}>IITG</span>
+          <span style={{ fontFamily: "var(--font-sans)", fontSize: 18, fontWeight: 700, color: "#fff", letterSpacing: "-0.015em" }}>MyAlum</span>
+          <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 14 }}>·</span>
+          <span style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em", fontWeight: 600 }}>IITG</span>
         </Link>
 
         {/* Nav links */}
-        <div style={{ display: "flex", gap: 2, flex: 1, alignItems: "center", height: "100%" }}>
+        <div style={{ 
+          display: "flex", 
+          gap: 8, 
+          flex: 1, 
+          alignItems: "center", 
+          height: "100%",
+          overflowX: "auto",
+          whiteSpace: "nowrap",
+          scrollbarWidth: "none", // Hide default scrollbars
+          msOverflowStyle: "none",
+        }}>
           {links.map(({ to, label }) => {
             const active = pathname === to;
             return (
               <Link key={to} to={to}
                 className={`nav-link${active ? " active" : ""}`}
-                style={{ fontSize: 13, fontWeight: active ? 500 : 400, color: active ? "#fff" : "rgba(255,255,255,0.5)", padding: "6px 12px", borderRadius: 3, letterSpacing: "-0.005em" }}>
+                style={{ 
+                  fontSize: 14.5, 
+                  fontWeight: 500, 
+                  color: active ? "#fff" : "rgba(255,255,255,0.65)", 
+                  padding: "8px 14px", 
+                  borderRadius: 4, 
+                  letterSpacing: "-0.005em",
+                  transition: "color 150ms ease",
+                  flexShrink: 0
+                }}>
                 {label}
               </Link>
             );
@@ -63,28 +82,28 @@ export default function Navbar() {
           {user ? (
             <>
               {/* Bell */}
-              <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,255,255,0.35)", position: "relative", display: "flex" }}>
-                <Bell style={{ width: 15, height: 15 }} />
-                <span style={{ position: "absolute", top: 5, right: 5, width: 5, height: 5, borderRadius: "50%", background: "var(--amber)" }} />
+              <button style={{ background: "none", border: "none", cursor: "pointer", padding: 6, color: "rgba(255,255,255,0.55)", position: "relative", display: "flex" }}>
+                <Bell style={{ width: 16, height: 16 }} />
+                <span style={{ position: "absolute", top: 5, right: 5, width: 6, height: 6, borderRadius: "50%", background: "var(--amber)" }} />
               </button>
 
               {/* Profile dropdown */}
-              <div ref={dropRef} style={{ position: "relative", borderLeft: "1px solid rgba(255,255,255,0.12)", paddingLeft: 14 }}>
+              <div ref={dropRef} style={{ position: "relative", borderLeft: "1px solid rgba(255,255,255,0.15)", paddingLeft: 16, display: "flex", alignItems: "center" }}>
                 <button onClick={() => setOpen(v => !v)}
-                  style={{ display: "flex", alignItems: "center", gap: 8, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+                  style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: 0 }}>
                   {/* Avatar */}
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(255,255,255,0.12)", border: `1px solid ${open ? "rgba(255,255,255,0.45)" : "rgba(255,255,255,0.22)"}`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 11, fontWeight: 600, flexShrink: 0, transition: "border-color 120ms" }}>
+                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: `1px solid ${open ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.25)"}`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 600, flexShrink: 0, transition: "border-color 150ms" }}>
                     {user.avatar}
                   </div>
                   <div style={{ textAlign: "left" }}>
-                    <div style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.55)", letterSpacing: "0.06em", lineHeight: 1.2 }}>
-                      {user.name.split(" ")[0].toUpperCase()} · {user.badge}
+                    <div style={{ fontFamily: "var(--font-sans)", fontSize: 12.5, fontWeight: 600, color: "#fff", lineHeight: 1.2 }}>
+                      {user.name.split(" ")[0]}
                     </div>
-                    <div style={{ ...mono, fontSize: 9, color: "rgba(255,255,255,0.3)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                      {user.role}
+                    <div style={{ fontFamily: "var(--font-sans)", fontSize: 10.5, color: "rgba(255,255,255,0.5)", fontWeight: 500, textTransform: "capitalize" }}>
+                      {user.role} · {user.badge}
                     </div>
                   </div>
-                  <ChevronDown style={{ width: 11, height: 11, color: "rgba(255,255,255,0.3)", transform: open ? "rotate(180deg)" : "none", transition: "transform 150ms" }} />
+                  <ChevronDown style={{ width: 12, height: 12, color: "rgba(255,255,255,0.4)", transform: open ? "rotate(180deg)" : "none", transition: "transform 150ms" }} />
                 </button>
 
                 {/* Dropdown menu */}

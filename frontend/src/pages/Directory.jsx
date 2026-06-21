@@ -1,9 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, X, Download } from "lucide-react";
+import { Search, X, Download, HelpCircle } from "lucide-react";
 import { alumni, branches, categories } from "../data/mockData";
 import AlumniCard from "../components/AlumniCard";
 import { mono, serif, T, catBadge } from "../theme";
+import { AlumniCardSkeleton } from "../components/SkeletonLoader";
+import EmptyState from "../components/EmptyState";
 
 export default function Directory() {
   const [params] = useSearchParams();
@@ -13,6 +15,13 @@ export default function Directory() {
   const [isNRI,    setIsNRI]    = useState("");
   const [bFrom,    setBFrom]    = useState("");
   const [bTo,      setBTo]      = useState("");
+  const [loading,  setLoading]  = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, [q, category, branch, isNRI, bFrom, bTo]);
 
   const filtered = useMemo(() => alumni.filter(a => {
     const lq = q.toLowerCase();
@@ -28,13 +37,13 @@ export default function Directory() {
     if (branch   && a.branch   !== branch)   return false;
     if (isNRI === "true"  && !a.isNRI) return false;
     if (isNRI === "false" &&  a.isNRI) return false;
-    if (bFrom && a.endYear   < Number(bFrom)) return false;
-    if (bTo   && a.startYear > Number(bTo))   return false;
+    if (bFrom && a.endYear < Number(bFrom)) return false;
+    if (bTo   && a.endYear > Number(bTo))   return false;
     return true;
   }), [q, category, branch, isNRI, bFrom, bTo]);
 
-  const hasFilters = category || branch || isNRI || bFrom || bTo;
-  const clear = () => { setCategory(""); setBranch(""); setIsNRI(""); setBFrom(""); setBTo(""); };
+  const hasFilters = q || category || branch || isNRI || bFrom || bTo;
+  const clear = () => { setQ(""); setCategory(""); setBranch(""); setIsNRI(""); setBFrom(""); setBTo(""); };
 
   const Label = ({ children }) => (
     <div style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
@@ -46,10 +55,10 @@ export default function Directory() {
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px", display: "flex", gap: 24 }}>
+      <div className="flex flex-col md:flex-row gap-6" style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
 
         {/* ── Filter sidebar ── */}
-        <aside style={{ width: 200, flexShrink: 0 }}>
+        <aside className="w-full md:w-[200px]" style={{ flexShrink: 0 }}>
           <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, position: "sticky", top: 72, overflow: "hidden" }}>
 
             {/* Sidebar header */}
@@ -142,12 +151,20 @@ export default function Directory() {
           </div>
 
           {/* Results */}
-          {filtered.length === 0 ? (
-            <div className="dotted-grid" style={{ padding: "80px 0", textAlign: "center", borderRadius: 3, border: "1px solid var(--rule)" }}>
-              <p style={{ ...mono, fontSize: 12, color: "var(--sub)", margin: 0, letterSpacing: "0.04em" }}>NO RESULTS — try a different search</p>
-            </div>
-          ) : (
+          {loading ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 10 }}>
+              {[1, 2, 3, 4, 5, 6].map(i => <AlumniCardSkeleton key={i} />)}
+            </div>
+          ) : filtered.length === 0 ? (
+            <EmptyState 
+              icon={HelpCircle} 
+              title="No alumni matches found" 
+              description="We couldn't find any alumni matching your search keyword or selected filters. Try broadening your criteria or reset filters." 
+              actionLabel="Clear Filters"
+              onAction={clear}
+            />
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 10 }} className="animate-fade-in">
               {filtered.map(a => <AlumniCard key={a.id} alumni={a} />)}
             </div>
           )}

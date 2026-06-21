@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { ArrowRight, Users, Globe, Building2, Rocket, Bell, BookOpen, MapPin, TrendingUp, MessageSquare, Heart, Share2 } from "lucide-react";
+import { ArrowRight, Users, Globe, Building2, Rocket, Bell, BookOpen, MapPin, TrendingUp, MessageSquare, Heart, Share2, HelpCircle } from "lucide-react";
 import { alumni, stats } from "../data/mockData";
 import { serif, mono, catBadge, avatarBg } from "../theme";
+import CompanyLogo from "../components/CompanyLogo";
+import { NewsCardSkeleton, StatsBarSkeleton } from "../components/SkeletonLoader";
+import EmptyState from "../components/EmptyState";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("activity");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!user) {
     return (
@@ -78,15 +87,19 @@ export default function Dashboard() {
         </div>
 
         {/* Stats Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
-          <StatCard icon={Users} label="Connections" value={isAlumni ? "142" : "8"} color="var(--blue)" />
-          <StatCard icon={Heart} label="Profile Views" value={isAlumni ? "324" : "45"} color="var(--red)" />
-          <StatCard icon={MessageSquare} label="Messages" value={isAlumni ? "12" : "3"} color="var(--green)" />
-          <StatCard icon={TrendingUp} label="Engagement" value={isAlumni ? "89%" : "62%"} color="var(--amber)" />
-        </div>
+        {loading ? (
+          <StatsBarSkeleton />
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-7 animate-fade-in">
+            <StatCard icon={Users} label="Connections" value={isAlumni ? "142" : "8"} color="var(--blue)" />
+            <StatCard icon={Heart} label="Profile Views" value={isAlumni ? "324" : "45"} color="var(--red)" />
+            <StatCard icon={MessageSquare} label="Messages" value={isAlumni ? "12" : "3"} color="var(--green)" />
+            <StatCard icon={TrendingUp} label="Engagement" value={isAlumni ? "89%" : "62%"} color="var(--amber)" />
+          </div>
+        )}
 
         {/* Main Content Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 24 }}>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
 
           {/* Left Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -169,13 +182,17 @@ export default function Dashboard() {
               <div style={{
                 display: "flex",
                 borderBottom: "1px solid var(--rule)",
+                overflowX: "auto",
+                whiteSpace: "nowrap",
+                scrollbarWidth: "none", // Hide default scrollbar
+                msOverflowStyle: "none",
               }}>
                 {["activity", "connections", "saved"].map(tab => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     style={{
-                      flex: 1,
+                      flex: "1 0 auto", // Allow shrink/grow as needed, but do not collapse below minimum content size
                       padding: "12px 16px",
                       background: activeTab === tab ? "var(--paper)" : "transparent",
                       border: "none",
@@ -185,6 +202,7 @@ export default function Dashboard() {
                       fontWeight: activeTab === tab ? 600 : 500,
                       color: activeTab === tab ? "var(--ink)" : "var(--sub)",
                       textTransform: "capitalize",
+                      flexShrink: 0
                     }}
                   >
                     {tab}
@@ -195,44 +213,61 @@ export default function Dashboard() {
               {/* Activity Content */}
               <div style={{ padding: "16px" }}>
                 {activeTab === "activity" && (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {updates.map((update, i) => (
-                      <div key={i} style={{
-                        padding: "12px",
-                        background: "var(--paper)",
-                        borderRadius: 4,
-                        display: "flex",
-                        gap: 12,
-                        alignItems: "flex-start",
-                      }}>
-                        <div style={{ fontSize: 20 }}>{update.icon}</div>
-                        <div style={{ flex: 1 }}>
-                          <p style={{ fontSize: 13, color: "var(--ink)", margin: "0 0 4px", fontWeight: 500 }}>
-                            {update.text}
-                          </p>
-                          <span style={{ ...mono, fontSize: 11, color: "var(--sub)" }}>{update.date}</span>
+                  loading ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      <NewsCardSkeleton />
+                      <NewsCardSkeleton />
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }} className="animate-fade-in">
+                      {updates.map((update, i) => (
+                        <div key={i} style={{
+                          padding: "12px",
+                          background: "var(--paper)",
+                          borderRadius: 4,
+                          display: "flex",
+                          gap: 12,
+                          alignItems: "flex-start",
+                        }}>
+                          <div style={{ fontSize: 20 }}>{update.icon}</div>
+                          <div style={{ flex: 1 }}>
+                            <p style={{ fontSize: 13, color: "var(--ink)", margin: "0 0 4px", fontWeight: 500 }}>
+                              {update.text}
+                            </p>
+                            <span style={{ ...mono, fontSize: 11, color: "var(--sub)" }}>{update.date}</span>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )
                 )}
 
                 {activeTab === "connections" && (
-                  <div style={{ textAlign: "center", padding: "20px" }}>
-                    <Users style={{ width: 40, height: 40, color: "var(--rule)", margin: "0 auto 12px" }} />
-                    <p style={{ fontSize: 13, color: "var(--sub)" }}>
-                      {isAlumni ? "You have 142 connections" : "Connect with alumni to expand your network"}
-                    </p>
-                  </div>
+                  isAlumni ? (
+                    <div style={{ textAlign: "center", padding: "30px 20px" }} className="animate-fade-in">
+                      <Users style={{ width: 44, height: 44, color: "var(--blue)", margin: "0 auto 12px", opacity: 0.8 }} />
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", margin: "0 0 4px" }}>You have 142 connections</p>
+                      <p style={{ fontSize: 12.5, color: "var(--sub)", margin: 0 }}>Your alumni professional network is active and healthy.</p>
+                    </div>
+                  ) : (
+                    <EmptyState
+                      icon={Users}
+                      title="No connections yet"
+                      description="Connect with alumni, batchmates, and professors to expand your professional network and find referral opportunities."
+                      actionLabel="Browse Directory"
+                      onAction={() => window.location.href = "/directory"}
+                    />
+                  )
                 )}
 
                 {activeTab === "saved" && (
-                  <div style={{ textAlign: "center", padding: "20px" }}>
-                    <Heart style={{ width: 40, height: 40, color: "var(--rule)", margin: "0 auto 12px" }} />
-                    <p style={{ fontSize: 13, color: "var(--sub)" }}>
-                      No saved items yet. Explore and save resources you find useful.
-                    </p>
-                  </div>
+                  <EmptyState
+                    icon={Heart}
+                    title="No bookmarked items"
+                    description="Save job placements, referrals, guides, or lecture notes to retrieve them instantly on this tab."
+                    actionLabel="Explore Placements"
+                    onAction={() => window.location.href = "/placements"}
+                  />
                 )}
               </div>
             </div>
@@ -316,9 +351,9 @@ export default function Dashboard() {
               <h3 style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: "0 0 12px" }}>Recommended</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {[
-                  { name: "Priya Nair", role: "Research Scientist at MIT" },
-                  { name: "Rahul Gupta", role: "Engineering Manager at Tata Motors" },
-                  { name: "Sneha Kapoor", role: "Deputy Director at NITI Aayog" },
+                  { name: "Priya Nair", role: "Research Scientist", company: "MIT Media Lab" },
+                  { name: "Rahul Gupta", role: "Engineering Manager", company: "Tata Motors" },
+                  { name: "Sneha Kapoor", role: "Deputy Director", company: "NITI Aayog" },
                 ].map(person => (
                   <div key={person.name} style={{
                     padding: "10px",
@@ -327,14 +362,18 @@ export default function Dashboard() {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    gap: 8
                   }}>
-                    <div>
-                      <p style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)", margin: "0 0 2px" }}>
-                        {person.name}
-                      </p>
-                      <p style={{ fontSize: 11, color: "var(--sub)", margin: 0 }}>
-                        {person.role}
-                      </p>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", minWidth: 0, flex: 1 }}>
+                      <CompanyLogo name={person.company} size={14} />
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <p style={{ fontSize: 12, fontWeight: 600, color: "var(--ink)", margin: "0 0 2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {person.name}
+                        </p>
+                        <p style={{ fontSize: 11, color: "var(--sub)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {person.role} at <strong>{person.company}</strong>
+                        </p>
+                      </div>
                     </div>
                     <button style={{
                       padding: "4px 10px",

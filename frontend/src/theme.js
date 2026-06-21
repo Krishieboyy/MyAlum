@@ -12,34 +12,34 @@ export const T = {
   sub:     'var(--sub)',
 };
 
-export const serif = { fontFamily: '"Source Serif 4", Georgia, serif' };
+export const serif = { fontFamily: '"Inter", "Source Serif 4", Georgia, serif' };
 export const mono  = { fontFamily: '"IBM Plex Mono", ui-monospace, monospace', fontVariantNumeric: 'tabular-nums' };
-export const sans  = { fontFamily: '"Public Sans", "Inter", system-ui, sans-serif' };
+export const sans  = { fontFamily: '"Inter", "Public Sans", system-ui, sans-serif' };
 
 // Category badge styles
 const CAT = {
-  FOUNDER:        ['#EEF2F8', '#1B3A66', '#B8C8DF'],
-  EMPLOYEE:       ['#F5F5F4', '#44403C', '#D6D3CE'],
-  'GOVT OFFICER': ['#EDFAF3', '#2E7D5B', '#9ACFB8'],
-  BUSINESSMAN:    ['#FDF6EE', '#C2772E', '#E8C89A'],
-  RESEARCHER:     ['#EEF2F8', '#1B3A66', '#B8C8DF'],
-  TEACHER:        ['#F5F5F4', '#44403C', '#D6D3CE'],
-  PROFESSOR:      ['#F5F5F4', '#44403C', '#D6D3CE'],
+  FOUNDER:        ['#EFF6FF', '#1E40AF', '#DBEAFE'],
+  EMPLOYEE:       ['#F8FAFC', '#475569', '#E2E8F0'],
+  'GOVT OFFICER': ['#F0FDF4', '#166534', '#BBF7D0'],
+  BUSINESSMAN:    ['#FEF3C7', '#92400E', '#FDE68A'],
+  RESEARCHER:     ['#EEF2F6', '#312E81', '#C7D2FE'],
+  TEACHER:        ['#F1F5F9', '#334155', '#CBD5E1'],
+  PROFESSOR:      ['#FFF1F2', '#9F1239', '#FECDD3'],
 };
 
 export const catBadge = (category) => {
-  const [bg, color, border] = CAT[category] || ['#F5F5F4', '#6B6963', '#E4E1DA'];
+  const [bg, color, border] = CAT[category] || ['#F8FAFC', '#475569', '#E2E8F0'];
   return { background: bg, color, borderColor: border };
 };
 
 // Avatar background (round, institutional palette)
 const AVATAR_BG = {
-  FOUNDER:        '#1B3A66',
-  RESEARCHER:     '#1B3A66',
-  'GOVT OFFICER': '#2E7D5B',
-  EMPLOYEE:       '#6B6963',
-  BUSINESSMAN:    '#C2772E',
-  TEACHER:        '#44403C',
-  PROFESSOR:      '#44403C',
+  FOUNDER:        '#1E40AF',
+  RESEARCHER:     '#312E81',
+  'GOVT OFFICER': '#166534',
+  EMPLOYEE:       '#475569',
+  BUSINESSMAN:    '#92400E',
+  TEACHER:        '#334155',
+  PROFESSOR:      '#9F1239',
 };
-export const avatarBg = (category) => AVATAR_BG[category] || '#6B6963';
+export const avatarBg = (category) => AVATAR_BG[category] || '#475569';

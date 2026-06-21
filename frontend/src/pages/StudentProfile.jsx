@@ -82,7 +82,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Metadata row */}
-          <div style={{ padding: "16px 28px", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "12px 0", borderBottom: "1px solid var(--rule)" }}>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-3 gap-x-4" style={{ padding: "16px 28px", borderBottom: "1px solid var(--rule)" }}>
             <Field label="Roll No."  value={user.rollNo || "—"} />
             <Field label="Course"    value={user.course  || "—"} />
             <Field label="Branch"    value={user.branchCode || "—"} />
