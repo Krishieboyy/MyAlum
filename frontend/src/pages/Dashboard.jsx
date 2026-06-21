@@ -1,160 +1,356 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Users, Globe, Building2, Rocket, Bell, BookOpen, MapPin } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { ArrowRight, Users, Globe, Building2, Rocket, Bell, BookOpen, MapPin, TrendingUp, MessageSquare, Heart, Share2 } from "lucide-react";
 import { alumni, stats } from "../data/mockData";
-import AlumniCard from "../components/AlumniCard";
 import { serif, mono, catBadge, avatarBg } from "../theme";
 
-const currentUser = alumni[0];
-
 export default function Dashboard() {
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("activity");
 
-  const StatRow = ({ label, value }) => (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 0", borderBottom: "1px solid var(--rule)" }}>
-      <span style={{ fontSize: 12, color: "var(--sub)" }}>{label}</span>
-      <span style={{ ...mono, fontSize: 13, color: "var(--ink)" }}>{value}</span>
-    </div>
-  );
+  if (!user) {
+    return (
+      <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ fontSize: 14, color: "var(--sub)" }}>Please log in to view your dashboard</p>
+        </div>
+      </div>
+    );
+  }
+
+  const isAlumni = user.role === "alumni";
+  const currentUser = isAlumni ? alumni.find(a => a.id === user.alumniId) : null;
 
   const updates = [
-    { type: "BATCH", text: "CSE 2014 batch reunion — Bangalore · Jul 2025", date: "12 Jun" },
-    { type: "FORUM", text: "New thread: 'Breaking into deep tech startups'", date: "10 Jun" },
-    { type: "ALUMNI", text: "Priya Nair published a note on her MIT research", date: "8 Jun" },
-    { type: "EVENT", text: "Alcheringa 2025 invites alumni participation", date: "5 Jun" },
+    { type: "CONNECTION", text: "Rohan Mehta sent you a connection request", date: "2 hours ago", icon: "👥" },
+    { type: "MENTION", text: "Your post was liked by 12 alumni", date: "5 hours ago", icon: "❤️" },
+    { type: "RESOURCE", text: "New resource added: 'System Design Interview Guide'", date: "1 day ago", icon: "📚" },
+    { type: "EVENT", text: "Alcheringa 2025 — Alumni networking event", date: "2 days ago", icon: "🎉" },
+    { type: "OPPORTUNITY", text: "New internship opportunity at Google", date: "3 days ago", icon: "🚀" },
   ];
 
-  const typeColor = { BATCH: "var(--blue)", FORUM: "var(--amber)", ALUMNI: "var(--green)", EVENT: "var(--sub)" };
+  const StatCard = ({ icon: Icon, label, value, color }) => (
+    <div style={{
+      background: "var(--surface)",
+      border: "1px solid var(--rule)",
+      borderRadius: 6,
+      padding: "16px",
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+    }}>
+      <div style={{
+        width: 40,
+        height: 40,
+        borderRadius: 6,
+        background: `${color}20`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: color,
+      }}>
+        <Icon size={20} />
+      </div>
+      <div>
+        <div style={{ fontSize: 18, fontWeight: 600, color: "var(--ink)" }}>{value}</div>
+        <div style={{ fontSize: 12, color: "var(--sub)" }}>{label}</div>
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
 
-        {/* ── Page header ── */}
+        {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 4 }}>
-            <h1 style={{ ...serif, fontSize: 22, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>Dashboard</h1>
-            <span style={{ ...mono, fontSize: 10.5, color: "var(--sub)" }}>— logged in as ARJUN · CSE·14</span>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
+            <h1 style={{ ...serif, fontSize: 28, fontWeight: 600, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+              Dashboard
+            </h1>
+            <span style={{ ...mono, fontSize: 11, color: "var(--sub)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              Welcome back, {user.name.split(" ")[0]}
+            </span>
           </div>
-          <div className="rule" />
+          <p style={{ fontSize: 14, color: "var(--sub)", margin: 0 }}>
+            {isAlumni ? "Manage your profile, connections, and activity" : "Track your progress and opportunities"}
+          </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: 16 }}>
+        {/* Stats Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12, marginBottom: 28 }}>
+          <StatCard icon={Users} label="Connections" value={isAlumni ? "142" : "8"} color="var(--blue)" />
+          <StatCard icon={Heart} label="Profile Views" value={isAlumni ? "324" : "45"} color="var(--red)" />
+          <StatCard icon={MessageSquare} label="Messages" value={isAlumni ? "12" : "3"} color="var(--green)" />
+          <StatCard icon={TrendingUp} label="Engagement" value={isAlumni ? "89%" : "62%"} color="var(--amber)" />
+        </div>
 
-          {/* ── Main column ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Main Content Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 24 }}>
 
-            {/* My record card */}
-            <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
-              <div style={{ padding: "12px 20px", borderBottom: "1px solid var(--rule)" }}>
-                <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase" }}>My record</span>
-              </div>
-              <div style={{ padding: "18px 20px", display: "flex", alignItems: "flex-start", gap: 18 }}>
-                <div style={{ width: 46, height: 46, borderRadius: "50%", background: avatarBg(currentUser.category), display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14, fontWeight: 600, flexShrink: 0 }}>
-                  {currentUser.avatar}
+          {/* Left Column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+            {/* Profile Summary Card */}
+            {isAlumni && currentUser && (
+              <div style={{
+                background: "var(--surface)",
+                border: "1px solid var(--rule)",
+                borderRadius: 6,
+                overflow: "hidden",
+              }}>
+                <div style={{
+                  height: 100,
+                  background: "linear-gradient(135deg, var(--blue) 0%, rgba(0, 51, 102, 0.8) 100%)",
+                  position: "relative",
+                }} />
+                <div style={{ padding: "0 20px 20px", position: "relative" }}>
+                  <div style={{
+                    width: 70,
+                    height: 70,
+                    borderRadius: "50%",
+                    background: avatarBg(currentUser.category),
+                    border: "4px solid var(--surface)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "#fff",
+                    fontSize: 24,
+                    fontWeight: 600,
+                    marginTop: -35,
+                    marginBottom: 12,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  }}>
+                    {currentUser.avatar}
+                  </div>
+                  <h2 style={{ ...serif, fontSize: 18, fontWeight: 600, color: "var(--ink)", margin: "0 0 4px" }}>
+                    {currentUser.name}
+                  </h2>
+                  <p style={{ fontSize: 13, color: "var(--sub)", margin: "0 0 12px" }}>
+                    {currentUser.currentCompany.position} at {currentUser.currentCompany.name}
+                  </p>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button style={{
+                      padding: "8px 16px",
+                      background: "var(--blue)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: 4,
+                      cursor: "pointer",
+                      fontSize: 12,
+                      fontWeight: 500,
+                    }}>
+                      Edit Profile
+                    </button>
+                    <button style={{
+                      padding: "8px 16px",
+                      background: "transparent",
+                      color: "var(--blue)",
+                      border: "1px solid var(--blue)",
+                      borderRadius: 4,
+                      cursor: "pointer",
+                      fontSize: 12,
+                      fontWeight: 500,
+                    }}>
+                      View Public
+                    </button>
+                  </div>
                 </div>
-                <div style={{ flex: 1 }}>
-                  <p style={{ ...serif, fontSize: 18, fontWeight: 500, color: "var(--ink)", margin: "0 0 3px", letterSpacing: "-0.015em" }}>{currentUser.name}</p>
-                  <p style={{ fontSize: 12.5, color: "var(--sub)", margin: "0 0 10px" }}>{currentUser.currentCompany.position} · {currentUser.currentCompany.name}</p>
-                  <div style={{ display: "flex", gap: 16 }}>
-                    {[
-                      { l: "Card", v: currentUser.alumniCardId },
-                      { l: "Batch", v: `${currentUser.startYear}–${currentUser.endYear}` },
-                      { l: "Branch", v: "CSE" },
-                      { l: "City", v: currentUser.currentCity },
-                    ].map(({ l, v }) => (
-                      <div key={l}>
-                        <div style={{ ...mono, fontSize: 9, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 2 }}>{l}</div>
-                        <div style={{ ...mono, fontSize: 11, color: "var(--ink)" }}>{v}</div>
+              </div>
+            )}
+
+            {/* Activity Tabs */}
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--rule)",
+              borderRadius: 6,
+              overflow: "hidden",
+            }}>
+              <div style={{
+                display: "flex",
+                borderBottom: "1px solid var(--rule)",
+              }}>
+                {["activity", "connections", "saved"].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    style={{
+                      flex: 1,
+                      padding: "12px 16px",
+                      background: activeTab === tab ? "var(--paper)" : "transparent",
+                      border: "none",
+                      borderBottom: activeTab === tab ? "2px solid var(--blue)" : "none",
+                      cursor: "pointer",
+                      fontSize: 13,
+                      fontWeight: activeTab === tab ? 600 : 500,
+                      color: activeTab === tab ? "var(--ink)" : "var(--sub)",
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+
+              {/* Activity Content */}
+              <div style={{ padding: "16px" }}>
+                {activeTab === "activity" && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {updates.map((update, i) => (
+                      <div key={i} style={{
+                        padding: "12px",
+                        background: "var(--paper)",
+                        borderRadius: 4,
+                        display: "flex",
+                        gap: 12,
+                        alignItems: "flex-start",
+                      }}>
+                        <div style={{ fontSize: 20 }}>{update.icon}</div>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontSize: 13, color: "var(--ink)", margin: "0 0 4px", fontWeight: 500 }}>
+                            {update.text}
+                          </p>
+                          <span style={{ ...mono, fontSize: 11, color: "var(--sub)" }}>{update.date}</span>
+                        </div>
                       </div>
                     ))}
                   </div>
-                </div>
-                <Link to={`/profile/${currentUser.id}`}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--blue)", textDecoration: "none", fontWeight: 500, flexShrink: 0 }}>
-                  View profile <ArrowRight style={{ width: 11, height: 11 }} />
-                </Link>
+                )}
+
+                {activeTab === "connections" && (
+                  <div style={{ textAlign: "center", padding: "20px" }}>
+                    <Users style={{ width: 40, height: 40, color: "var(--rule)", margin: "0 auto 12px" }} />
+                    <p style={{ fontSize: 13, color: "var(--sub)" }}>
+                      {isAlumni ? "You have 142 connections" : "Connect with alumni to expand your network"}
+                    </p>
+                  </div>
+                )}
+
+                {activeTab === "saved" && (
+                  <div style={{ textAlign: "center", padding: "20px" }}>
+                    <Heart style={{ width: 40, height: 40, color: "var(--rule)", margin: "0 auto 12px" }} />
+                    <p style={{ fontSize: 13, color: "var(--sub)" }}>
+                      No saved items yet. Explore and save resources you find useful.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Activity feed */}
-            <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
-              <div style={{ padding: "12px 20px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
-                <Bell style={{ width: 12, height: 12, color: "var(--sub)" }} />
-                <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)" }}>Updates</span>
-              </div>
-              {updates.map((u, i) => (
-                <div key={i} style={{ padding: "12px 20px", borderBottom: i < updates.length - 1 ? "1px solid var(--rule)" : "none", display: "flex", alignItems: "flex-start", gap: 12 }}>
-                  <span style={{ ...mono, fontSize: 9, color: typeColor[u.type], letterSpacing: "0.08em", background: `${typeColor[u.type]}18`, border: `1px solid ${typeColor[u.type]}30`, borderRadius: 3, padding: "2px 6px", flexShrink: 0, marginTop: 1 }}>
-                    {u.type}
-                  </span>
-                  <span style={{ fontSize: 12.5, color: "var(--ink)", flex: 1, lineHeight: 1.5 }}>{u.text}</span>
-                  <span style={{ ...mono, fontSize: 10, color: "var(--sub)", flexShrink: 0 }}>{u.date}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Browse section */}
-            <div>
-              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
-                <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ink)" }}>Recent profiles</span>
-                <Link to="/directory" style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, color: "var(--blue)", textDecoration: "none" }}>
-                  Full directory <ArrowRight style={{ width: 11, height: 11 }} />
-                </Link>
-              </div>
-              <div className="rule" style={{ marginBottom: 12 }} />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
-                {alumni.slice(1, 5).map(a => <AlumniCard key={a.id} alumni={a} />)}
+            {/* Quick Actions */}
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--rule)",
+              borderRadius: 6,
+              padding: "16px",
+            }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: "0 0 12px" }}>Quick Actions</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {[
+                  { label: "Browse Directory", icon: "👥" },
+                  { label: "View Resources", icon: "📚" },
+                  { label: "Explore Jobs", icon: "🚀" },
+                  { label: "Join Events", icon: "🎉" },
+                ].map(action => (
+                  <button key={action.label} style={{
+                    padding: "12px",
+                    background: "var(--paper)",
+                    border: "1px solid var(--rule)",
+                    borderRadius: 4,
+                    cursor: "pointer",
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: "var(--ink)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    justifyContent: "center",
+                  }}>
+                    <span>{action.icon}</span>
+                    {action.label}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* ── Sidebar ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* Right Sidebar */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
-            {/* Network stats */}
-            <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
-              <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
-                <Users style={{ width: 12, height: 12, color: "var(--sub)" }} />
-                <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)" }}>Network</span>
-              </div>
-              <div style={{ padding: "0 16px" }}>
-                <StatRow label="Alumni registered" value="12,400+" />
-                <StatRow label="Countries" value="48" />
-                <StatRow label="Companies" value="3,200+" />
-                <StatRow label="Founders & CEOs" value="620" />
-                <div style={{ padding: "9px 0" }}>
-                  <span style={{ fontSize: 12, color: "var(--sub)" }}>CSE batch (your batch)</span>
-                  <div style={{ ...mono, fontSize: 13, color: "var(--ink)", marginTop: 3 }}>214 alumni</div>
-                </div>
+            {/* Network Stats */}
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--rule)",
+              borderRadius: 6,
+              padding: "16px",
+            }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: "0 0 12px" }}>Network Stats</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {[
+                  { label: "Total Alumni", value: stats.totalAlumni.toLocaleString() },
+                  { label: "Countries", value: stats.countries },
+                  { label: "Companies", value: stats.companies.toLocaleString() },
+                  { label: "Founders", value: stats.founders },
+                ].map(stat => (
+                  <div key={stat.label} style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingBottom: "8px",
+                    borderBottom: "1px solid var(--rule)",
+                  }}>
+                    <span style={{ fontSize: 12, color: "var(--sub)" }}>{stat.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{stat.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Quick links */}
-            <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, overflow: "hidden" }}>
-              <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--rule)" }}>
-                <span style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)" }}>Quick links</span>
+            {/* Recommendations */}
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--rule)",
+              borderRadius: 6,
+              padding: "16px",
+            }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", margin: "0 0 12px" }}>Recommended</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                {[
+                  { name: "Priya Nair", role: "Research Scientist at MIT" },
+                  { name: "Rahul Gupta", role: "Engineering Manager at Tata Motors" },
+                  { name: "Sneha Kapoor", role: "Deputy Director at NITI Aayog" },
+                ].map(person => (
+                  <div key={person.name} style={{
+                    padding: "10px",
+                    background: "var(--paper)",
+                    borderRadius: 4,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}>
+                    <div>
+                      <p style={{ fontSize: 12, fontWeight: 500, color: "var(--ink)", margin: "0 0 2px" }}>
+                        {person.name}
+                      </p>
+                      <p style={{ fontSize: 11, color: "var(--sub)", margin: 0 }}>
+                        {person.role}
+                      </p>
+                    </div>
+                    <button style={{
+                      padding: "4px 10px",
+                      background: "var(--blue)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: 3,
+                      cursor: "pointer",
+                      fontSize: 11,
+                      fontWeight: 500,
+                    }}>
+                      Connect
+                    </button>
+                  </div>
+                ))}
               </div>
-              {[
-                { icon: Users,     label: "Browse directory",     to: "/directory" },
-                { icon: BookOpen,  label: "My full profile",      to: `/profile/${currentUser.id}` },
-                { icon: Building2, label: "Admin panel",          to: "/admin" },
-              ].map(({ icon: Icon, label, to }) => (
-                <Link key={to} to={to} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 16px", borderBottom: "1px solid var(--rule)", textDecoration: "none", color: "var(--ink)", fontSize: 12.5, transition: "background 120ms" }}
-                  onMouseEnter={e => e.currentTarget.style.background = "var(--paper)"}
-                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                  <Icon style={{ width: 12, height: 12, color: "var(--sub)", flexShrink: 0 }} />
-                  {label}
-                  <ArrowRight style={{ width: 10, height: 10, color: "var(--rule)", marginLeft: "auto" }} />
-                </Link>
-              ))}
-              <div style={{ padding: "11px 16px" }} />
-            </div>
-
-            {/* Batch map teaser */}
-            <div className="dotted-grid" style={{ border: "1px solid var(--rule)", borderRadius: 3, padding: "18px 16px", textAlign: "center" }}>
-              <MapPin style={{ width: 16, height: 16, color: "var(--sub)", margin: "0 auto 8px" }} />
-              <p style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.08em", margin: "0 0 4px", textTransform: "uppercase" }}>Batch map</p>
-              <p style={{ fontSize: 12, color: "var(--sub)", margin: "0 0 8px", lineHeight: 1.5 }}>See where your batchmates are</p>
-              <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.06em" }}>COMING SOON</span>
             </div>
           </div>
         </div>

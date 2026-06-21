@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, LogOut, User, ChevronDown } from "lucide-react";
+import { Bell, LogOut, User, ChevronDown, Settings, LayoutDashboard, Shield } from "lucide-react";
 import { serif, mono } from "../theme";
 import { useAuth } from "../context/AuthContext";
 
@@ -105,6 +105,41 @@ export default function Navbar() {
                       onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                       <User style={{ width: 12, height: 12, color: "var(--sub)" }} />
                       My profile
+                    </Link>
+
+                    {/* Dashboard */}
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setOpen(false)}
+                      style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", textDecoration: "none", color: "var(--ink)", fontSize: 13, borderBottom: "1px solid var(--rule)", transition: "background 120ms" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "var(--paper)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                      <LayoutDashboard style={{ width: 12, height: 12, color: "var(--sub)" }} />
+                      Dashboard
+                    </Link>
+
+                    {/* Admin Panel - only for admins */}
+                    {user.role === "admin" && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setOpen(false)}
+                        style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", textDecoration: "none", color: "#dc2626", fontSize: 13, borderBottom: "1px solid var(--rule)", transition: "background 120ms" }}
+                        onMouseEnter={e => e.currentTarget.style.background = "#FFF5F5"}
+                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                        <Shield style={{ width: 12, height: 12 }} />
+                        Admin Panel
+                      </Link>
+                    )}
+
+                    {/* Settings */}
+                    <Link
+                      to="/settings"
+                      onClick={() => setOpen(false)}
+                      style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", textDecoration: "none", color: "var(--ink)", fontSize: 13, borderBottom: "1px solid var(--rule)", transition: "background 120ms" }}
+                      onMouseEnter={e => e.currentTarget.style.background = "var(--paper)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                      <Settings style={{ width: 12, height: 12, color: "var(--sub)" }} />
+                      Settings
                     </Link>
 
                     {/* Sign out */}
