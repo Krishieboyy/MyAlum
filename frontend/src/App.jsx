@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import Settings from "./pages/Settings";
+import Globe from "./pages/Globe";
 
 function ProtectedRoute({ children, requiredRole }) {
   const { user } = useAuth();
@@ -41,6 +42,7 @@ export default function App() {
                 <Route path="/admin"           element={<ProtectedRoute requiredRole="admin"><Admin /></ProtectedRoute>} />
                 <Route path="/resources"       element={<Resources />} />
                 <Route path="/placements"      element={<Placements />} />
+                <Route path="/globe"          element={<Globe />} />
               </Routes>
             </div>
           } />
