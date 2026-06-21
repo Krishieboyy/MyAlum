@@ -1,9 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, X, Download } from "lucide-react";
+import { Search, X, Download, HelpCircle } from "lucide-react";
 import { alumni, branches, categories } from "../data/mockData";
 import AlumniCard from "../components/AlumniCard";
 import { mono, serif, T, catBadge } from "../theme";
+import { AlumniCardSkeleton } from "../components/SkeletonLoader";
+import EmptyState from "../components/EmptyState";
 
 export default function Directory() {
   const [params] = useSearchParams();
@@ -13,6 +15,13 @@ export default function Directory() {
   const [isNRI,    setIsNRI]    = useState("");
   const [bFrom,    setBFrom]    = useState("");
   const [bTo,      setBTo]      = useState("");
+  const [loading,  setLoading]  = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, [q, category, branch, isNRI, bFrom, bTo]);
 
   const filtered = useMemo(() => alumni.filter(a => {
     const lq = q.toLowerCase();
@@ -28,16 +37,16 @@ export default function Directory() {
     if (branch   && a.branch   !== branch)   return false;
     if (isNRI === "true"  && !a.isNRI) return false;
     if (isNRI === "false" &&  a.isNRI) return false;
-    if (bFrom && a.endYear   < Number(bFrom)) return false;
-    if (bTo   && a.startYear > Number(bTo))   return false;
+    if (bFrom && a.endYear < Number(bFrom)) return false;
+    if (bTo   && a.endYear > Number(bTo))   return false;
     return true;
   }), [q, category, branch, isNRI, bFrom, bTo]);
 
-  const hasFilters = category || branch || isNRI || bFrom || bTo;
-  const clear = () => { setCategory(""); setBranch(""); setIsNRI(""); setBFrom(""); setBTo(""); };
+  const hasFilters = q || category || branch || isNRI || bFrom || bTo;
+  const clear = () => { setQ(""); setCategory(""); setBranch(""); setIsNRI(""); setBFrom(""); setBTo(""); };
 
   const Label = ({ children }) => (
-    <div style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>
+    <div style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: 600, color: "var(--sub)", letterSpacing: "0.04em", textTransform: "uppercase", marginBottom: 8 }}>
       {children}
     </div>
   );
@@ -46,14 +55,14 @@ export default function Directory() {
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px", display: "flex", gap: 24 }}>
+      <div className="flex flex-col md:flex-row gap-6" style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }}>
 
         {/* ── Filter sidebar ── */}
-        <aside style={{ width: 200, flexShrink: 0 }}>
-          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, position: "sticky", top: 72, overflow: "hidden" }}>
+        <aside className="w-full md:w-[220px]" style={{ flexShrink: 0 }}>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", position: "sticky", top: "calc(var(--nav-height) + 16px)", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
 
             {/* Sidebar header */}
-            <div style={{ padding: "12px 14px", borderBottom: "1px solid var(--rule)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--rule)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ink)" }}>Filters</span>
               {hasFilters && (
                 <button onClick={clear} style={{ ...mono, fontSize: 10, color: "var(--red)", background: "none", border: "none", cursor: "pointer", letterSpacing: "0.05em" }}>
@@ -116,38 +125,49 @@ export default function Directory() {
         <div style={{ flex: 1, minWidth: 0 }}>
 
           {/* Header bar */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            <h1 style={{ ...serif, fontSize: 20, fontWeight: 500, letterSpacing: "-0.02em", color: "var(--ink)", margin: 0 }}>Alumni Directory</h1>
-            <span style={{ ...mono, fontSize: 11, color: "var(--sub)" }}>— 12,400+ registered</span>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 8 }}>
+            <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", color: "var(--ink)", margin: 0 }}>Alumni Directory</h1>
           </div>
+          <p style={{ fontSize: 15, color: "var(--sub)", margin: "0 0 16px" }}>12,400+ registered IIT Guwahati alumni worldwide</p>
 
           {/* Search + export */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
-            <div style={{ flex: 1, display: "flex", alignItems: "center", background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3 }}>
-              <Search style={{ width: 13, height: 13, color: "var(--sub)", margin: "0 10px", flexShrink: 0 }} />
-              <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search alumni…"
-                style={{ flex: 1, border: "none", outline: "none", fontSize: 13, color: "var(--ink)", padding: "9px 0", background: "none", fontFamily: "inherit" }} />
-              {q && <button onClick={() => setQ("")} style={{ background: "none", border: "none", cursor: "pointer", padding: "0 10px", color: "var(--sub)" }}><X style={{ width: 13, height: 13 }} /></button>}
+          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", transition: "border-color 150ms" }}
+              onFocusCapture={e => e.currentTarget.style.borderColor = "var(--blue)"}
+              onBlurCapture={e => e.currentTarget.style.borderColor = "var(--rule)"}
+            >
+              <Search style={{ width: 15, height: 15, color: "var(--muted)", margin: "0 12px", flexShrink: 0 }} />
+              <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search by name, company, branch, city…"
+                style={{ flex: 1, border: "none", outline: "none", fontSize: 14, color: "var(--ink)", padding: "11px 0", background: "none", fontFamily: "inherit" }} />
+              {q && <button onClick={() => setQ("")} style={{ background: "none", border: "none", cursor: "pointer", padding: "0 12px", color: "var(--muted)" }}><X style={{ width: 14, height: 14 }} /></button>}
             </div>
-            <button style={{ display: "flex", alignItems: "center", gap: 5, background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, padding: "0 14px", fontSize: 12, color: "var(--sub)", cursor: "pointer" }}>
-              <Download style={{ width: 12, height: 12 }} /> Export
+            <button style={{ display: "flex", alignItems: "center", gap: 6, background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-md)", padding: "0 16px", fontSize: 13, fontWeight: 500, color: "var(--sub)", cursor: "pointer" }}>
+              <Download style={{ width: 13, height: 13 }} /> Export
             </button>
           </div>
 
           {/* Result count */}
-          <div className="rule" style={{ marginBottom: 18 }} />
-          <div style={{ ...mono, fontSize: 10.5, color: "var(--sub)", marginBottom: 14, letterSpacing: "0.04em" }}>
-            {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-            {hasFilters && " · filtered"}
+          <div className="rule" style={{ marginBottom: 16 }} />
+          <div style={{ fontSize: 13, color: "var(--sub)", fontWeight: 500, marginBottom: 16 }}>
+            {filtered.length.toLocaleString()} result{filtered.length !== 1 ? "s" : ""}
+            {hasFilters && <span style={{ color: "var(--muted)" }}> · filtered</span>}
           </div>
 
           {/* Results */}
-          {filtered.length === 0 ? (
-            <div className="dotted-grid" style={{ padding: "80px 0", textAlign: "center", borderRadius: 3, border: "1px solid var(--rule)" }}>
-              <p style={{ ...mono, fontSize: 12, color: "var(--sub)", margin: 0, letterSpacing: "0.04em" }}>NO RESULTS — try a different search</p>
-            </div>
-          ) : (
+          {loading ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 10 }}>
+              {[1, 2, 3, 4, 5, 6].map(i => <AlumniCardSkeleton key={i} />)}
+            </div>
+          ) : filtered.length === 0 ? (
+            <EmptyState 
+              icon={HelpCircle} 
+              title="No alumni matches found" 
+              description="We couldn't find any alumni matching your search keyword or selected filters. Try broadening your criteria or reset filters." 
+              actionLabel="Clear Filters"
+              onAction={clear}
+            />
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 10 }} className="animate-fade-in">
               {filtered.map(a => <AlumniCard key={a.id} alumni={a} />)}
             </div>
           )}

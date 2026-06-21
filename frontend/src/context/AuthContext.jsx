@@ -3,6 +3,13 @@ import { alumni } from "../data/mockData";
 
 const AuthContext = createContext(null);
 
+export const MOCK_ADMIN = {
+  role: "admin",
+  name: "Admin User",
+  email: "admin@iitg.ac.in",
+  avatar: "AU",
+};
+
 export const MOCK_ALUMNI = {
   role: "alumni",
   name: alumni[0].name,
@@ -53,7 +60,10 @@ export function AuthProvider({ children }) {
   });
 
   const login = (role) => {
-    const u = role === "alumni" ? MOCK_ALUMNI : MOCK_STUDENT;
+    let u;
+    if (role === "alumni") u = MOCK_ALUMNI;
+    else if (role === "admin") u = MOCK_ADMIN;
+    else u = MOCK_STUDENT;
     localStorage.setItem("myalum_user", JSON.stringify(u));
     setUser(u);
   };

@@ -82,7 +82,7 @@ export default function StudentProfile() {
           </div>
 
           {/* Metadata row */}
-          <div style={{ padding: "16px 28px", display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: "12px 0", borderBottom: "1px solid var(--rule)" }}>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-y-3 gap-x-4" style={{ padding: "16px 28px", borderBottom: "1px solid var(--rule)" }}>
             <Field label="Roll No."  value={user.rollNo || "—"} />
             <Field label="Course"    value={user.course  || "—"} />
             <Field label="Branch"    value={user.branchCode || "—"} />
@@ -95,11 +95,11 @@ export default function StudentProfile() {
           <div style={{ padding: "14px 28px 16px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
               <span style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.08em", flexShrink: 0 }}>CGPA TREND</span>
-              <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 6, height: 28 }}>
+              <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 6, height: 56 }}>
                 {SEMESTER_CGPA.map(({ sem, cgpa, current }) => (
                   <div key={sem} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                     <div style={{ ...mono, fontSize: 8.5, color: current ? "var(--ink)" : "var(--sub)" }}>{cgpa}</div>
-                    <div style={{ width: "100%", height: Math.round((cgpa / 10) * 20), background: current ? "var(--blue)" : "var(--rule)", borderRadius: 2, minHeight: 3 }} />
+                    <div style={{ width: "100%", height: Math.round((cgpa / 10) * 24), background: current ? "var(--blue)" : "var(--rule)", borderRadius: 2, minHeight: 3 }} />
                     <div style={{ ...mono, fontSize: 8, color: "var(--sub)", letterSpacing: "0.04em" }}>{sem}</div>
                   </div>
                 ))}
