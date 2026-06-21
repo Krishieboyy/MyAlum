@@ -67,7 +67,7 @@ function NewsCard({ item, large = false }) {
             fontSize: large ? 20 : 16, 
             fontWeight: 600, 
             color: "var(--ink)", 
-            margin: "0 0 8px", 
+            margin: "6px 0 8px", 
             lineHeight: 1.4, 
             letterSpacing: "-0.01em" 
           }}>
@@ -261,7 +261,7 @@ export default function Home() {
           {loading ? (
             <StatsBarSkeleton />
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               {[
                 { label: "Total Alumni", value: stats.totalAlumni.toLocaleString(), icon: Users, color: "#1e40af", bg: "#eff6ff" },
                 { label: "Countries", value: stats.countries, icon: Globe, color: "#166534", bg: "#f0fdf4" },
