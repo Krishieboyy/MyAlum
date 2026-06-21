@@ -30,25 +30,25 @@ export default function Profile() {
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
       {/* Back button */}
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "16px 24px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "16px 28px" }}>
         <Link to="/directory" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--sub)", textDecoration: "none" }}>
           <ArrowLeft style={{ width: 12, height: 12 }} /> Directory
         </Link>
       </div>
 
       {/* Profile Card */}
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 24px 24px", display: "grid", gridTemplateColumns: "1fr 300px", gap: 24 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 28px 32px", display: "grid", gridTemplateColumns: "1fr 300px", gap: 24 }}>
         
         {/* Main Content */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           
           {/* Header Card with Banner */}
-          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, overflow: "hidden" }}>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
             
             {/* Banner */}
             <div style={{
-              height: 180,
-              background: `linear-gradient(135deg, var(--blue) 0%, rgba(0, 51, 102, 0.8) 100%)`,
+              height: 200,
+              background: `linear-gradient(135deg, #1E4B87 0%, #0d2a52 60%, #1a3a6e 100%)`,
               position: "relative",
             }} />
 
@@ -80,7 +80,7 @@ export default function Profile() {
                 
                 {/* Left Side: Name and Professional Headline */}
                 <div style={{ flex: 1, minWidth: 280 }}>
-                  <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 26, fontWeight: 700, color: "var(--ink)", margin: "0 0 6px", letterSpacing: "-0.015em" }}>
+                  <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 32, fontWeight: 700, color: "var(--ink)", margin: "0 0 8px", letterSpacing: "-0.02em" }}>
                     {a.name}
                   </h1>
                   <p style={{ fontSize: 16, fontWeight: 500, color: "var(--ink)", margin: "0 0 10px", lineHeight: 1.4 }}>
@@ -129,14 +129,14 @@ export default function Profile() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  padding: "8px 16px",
+                  padding: "10px 20px",
                   background: "var(--blue)",
                   color: "#fff",
                   border: "none",
-                  borderRadius: 4,
+                  borderRadius: 8,
                   cursor: "pointer",
-                  fontSize: 13,
-                  fontWeight: 500,
+                  fontSize: 14,
+                  fontWeight: 600,
                 }}>
                   <Users style={{ width: 14, height: 14 }} /> Connect
                 </button>
@@ -144,14 +144,14 @@ export default function Profile() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 6,
-                  padding: "8px 16px",
+                  padding: "10px 20px",
                   background: "transparent",
                   color: "var(--blue)",
-                  border: "1px solid var(--blue)",
-                  borderRadius: 4,
+                  border: "1.5px solid var(--blue)",
+                  borderRadius: 8,
                   cursor: "pointer",
-                  fontSize: 13,
-                  fontWeight: 500,
+                  fontSize: 14,
+                  fontWeight: 600,
                 }}>
                   <MessageCircle style={{ width: 14, height: 14 }} /> Message
                 </button>
@@ -160,13 +160,13 @@ export default function Profile() {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
-                    padding: "8px 16px",
+                    padding: "10px 20px",
                     background: "transparent",
                     color: "var(--sub)",
                     border: "1px solid var(--rule)",
-                    borderRadius: 4,
+                    borderRadius: 8,
                     textDecoration: "none",
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: 500,
                   }}>
                   <ExternalLink style={{ width: 14, height: 14 }} /> LinkedIn
@@ -227,10 +227,10 @@ export default function Profile() {
           </div>
 
           {/* Career History */}
-          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, overflow: "hidden" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
-              <Building2 style={{ width: 14, height: 14, color: "var(--blue)" }} />
-              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Career History</span>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
+            <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
+              <Building2 style={{ width: 16, height: 16, color: "var(--blue)" }} />
+              <span style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)" }}>Career History</span>
             </div>
 
             {/* Current Position */}
@@ -242,8 +242,8 @@ export default function Profile() {
                 </div>
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>{a.currentCompany.position}</span>
-                    <span className="badge" style={{ background: "#EDFAF3", color: "var(--green)", borderColor: "#9ACFB8", fontSize: 10 }}>CURRENT</span>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)" }}>{a.currentCompany.position}</span>
+                    <span className="badge" style={{ background: "#EDFAF3", color: "var(--green)", borderColor: "#9ACFB8", fontSize: 11 }}>Current</span>
                   </div>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, margin: "2px 0 6px 0" }}>
                     <CompanyLogo name={a.currentCompany.name} size={13} />
@@ -278,10 +278,10 @@ export default function Profile() {
 
           {/* Achievements */}
           {a.achievements.length > 0 && (
-            <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, overflow: "hidden" }}>
-              <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
-                <Award style={{ width: 14, height: 14, color: "var(--amber)" }} />
-                <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Achievements</span>
+            <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
+              <div style={{ padding: "16px 22px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
+                <Award style={{ width: 16, height: 16, color: "var(--amber)" }} />
+                <span style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)" }}>Achievements</span>
               </div>
               <div style={{ padding: "12px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
                 {a.achievements.map((ach) => (
@@ -299,10 +299,10 @@ export default function Profile() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           
           {/* Campus Record */}
-          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, overflow: "hidden" }}>
-            <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
-              <Users style={{ width: 13, height: 13, color: "var(--blue)" }} />
-              <span style={{ fontSize: 12, fontWeight: 600, color: "var(--ink)" }}>Campus Record</span>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", overflow: "hidden", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
+            <div style={{ padding: "14px 18px", borderBottom: "1px solid var(--rule)", display: "flex", alignItems: "center", gap: 8 }}>
+              <Users style={{ width: 14, height: 14, color: "var(--blue)" }} />
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Campus Activities</span>
             </div>
             <div style={{ padding: "12px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
               {a.campusActivities.map((act) => (
@@ -319,8 +319,8 @@ export default function Profile() {
           </div>
 
           {/* Location History */}
-          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, padding: "14px 16px" }}>
-            <div style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10, fontWeight: 600 }}>Location History</div>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", padding: "16px 18px", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 12 }}>Location History</div>
             {[a.currentCity, ...a.pastCities].map((city, i) => (
               <div key={city + i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: i < a.pastCities.length ? 8 : 0 }}>
                 <MapPin style={{ width: 11, height: 11, color: i === 0 ? "var(--green)" : "var(--rule)", flexShrink: 0 }} />
@@ -332,8 +332,8 @@ export default function Profile() {
           </div>
 
           {/* Batch Info */}
-          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 6, padding: "14px 16px" }}>
-            <div style={{ ...mono, fontSize: 10, color: "var(--sub)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10, fontWeight: 600 }}>Education</div>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: "var(--radius-card)", padding: "16px 18px", boxShadow: "0 1px 2px rgba(0,0,0,.04)" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)", marginBottom: 12 }}>Education</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <div>
                 <span style={{ ...mono, fontSize: 9, color: "var(--sub)", letterSpacing: "0.08em", textTransform: "uppercase", display: "block", marginBottom: 2 }}>Batch</span>

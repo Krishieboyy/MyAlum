@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Bell, Lock, User, LogOut, ChevronRight } from "lucide-react";
+import { Bell, Lock, User, LogOut } from "lucide-react";
 
 export default function Settings() {
   const { user, logout } = useAuth();
@@ -29,316 +29,307 @@ export default function Settings() {
     }
   };
 
+  const tabs = [
+    { id: "account", label: "Account" },
+    { id: "privacy", label: "Privacy" },
+    { id: "notifications", label: "Notifications" },
+  ];
+
+  const inputStyle = {
+    width: "100%",
+    padding: "10px 14px",
+    border: "1px solid var(--rule)",
+    borderRadius: 8,
+    fontSize: 15,
+    color: "var(--ink)",
+    background: "var(--surface)",
+    outline: "none",
+    fontFamily: "inherit",
+    transition: "border-color 150ms",
+  };
+
+  const Toggle = ({ checked, onChange }) => (
+    <label className="toggle" style={{ cursor: "pointer" }}>
+      <input type="checkbox" checked={checked} onChange={onChange} />
+      <span className="toggle-track" />
+    </label>
+  );
+
+  const ToggleRow = ({ label, description, checked, onChange }) => (
+    <label className="toggle-wrapper" style={{ cursor: "pointer" }}>
+      <div>
+        <div style={{ fontSize: 15, fontWeight: 500, color: "var(--ink)" }}>{label}</div>
+        {description && <div style={{ fontSize: 13, color: "var(--sub)", marginTop: 2 }}>{description}</div>}
+      </div>
+      <Toggle checked={checked} onChange={onChange} />
+    </label>
+  );
+
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "2rem" }}>
-      <div style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2rem", fontWeight: "600", marginBottom: "0.5rem" }}>Settings</h1>
-        <p style={{ color: "var(--text-secondary)" }}>Manage your account, privacy, and notifications</p>
-      </div>
+    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "36px 28px" }}>
 
-      {/* Tab Navigation */}
-      <div style={{
-        display: "flex",
-        gap: "0.5rem",
-        borderBottom: "1px solid var(--border)",
-        marginBottom: "2rem",
-      }}>
-        {["account", "privacy", "notifications"].map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: "1rem 1.5rem",
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: "0.95rem",
-              fontWeight: activeTab === tab ? "600" : "400",
-              color: activeTab === tab ? "var(--text-primary)" : "var(--text-secondary)",
-              borderBottom: activeTab === tab ? "2px solid var(--accent)" : "none",
-              textTransform: "capitalize",
-            }}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+        {/* Page header */}
+        <div style={{ marginBottom: 32 }}>
+          <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 32, fontWeight: 700, color: "var(--ink)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>Settings</h1>
+          <p style={{ fontSize: 16, color: "var(--sub)", margin: 0 }}>Manage your account, privacy, and notification preferences</p>
+        </div>
 
-      {/* Account Settings */}
-      {activeTab === "account" && (
-        <div style={{ display: "grid", gap: "1.5rem" }}>
-          <div style={{
-            padding: "1.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "0.5rem",
-            background: "var(--paper)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-              <User size={20} style={{ color: "var(--accent)" }} />
-              <div>
-                <h3 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "0.25rem" }}>Profile Information</h3>
-                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>Update your name, email, and profile details</p>
+        {/* Tab Navigation */}
+        <div style={{
+          display: "flex",
+          gap: 4,
+          borderBottom: "1px solid var(--rule)",
+          marginBottom: 28,
+        }}>
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                padding: "10px 18px",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontSize: 15,
+                fontWeight: activeTab === tab.id ? 600 : 500,
+                color: activeTab === tab.id ? "var(--ink)" : "var(--sub)",
+                borderBottom: activeTab === tab.id ? "2px solid var(--blue)" : "2px solid transparent",
+                marginBottom: "-1px",
+                transition: "color 150ms, border-color 150ms",
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Account Settings ── */}
+        {activeTab === "account" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
+            {/* Profile Information */}
+            <div className="settings-card">
+              <div className="settings-card-header">
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "var(--blue-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <User size={18} style={{ color: "var(--blue)" }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)", margin: 0 }}>Profile Information</h3>
+                  <p style={{ fontSize: 13, color: "var(--sub)", margin: "2px 0 0" }}>Update your name, email, and profile details</p>
+                </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: "var(--ink)", marginBottom: 6 }}>Full Name</label>
+                  <input
+                    type="text"
+                    defaultValue={user?.name}
+                    style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = "var(--blue)"}
+                    onBlur={e => e.target.style.borderColor = "var(--rule)"}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 14, fontWeight: 500, color: "var(--ink)", marginBottom: 6 }}>Email Address</label>
+                  <input
+                    type="email"
+                    defaultValue={user?.email || user?.alumniEmailId}
+                    style={inputStyle}
+                    onFocus={e => e.target.style.borderColor = "var(--blue)"}
+                    onBlur={e => e.target.style.borderColor = "var(--rule)"}
+                  />
+                </div>
+                <div style={{ paddingTop: 4 }}>
+                  <button style={{
+                    padding: "10px 24px",
+                    background: "var(--blue)",
+                    color: "white",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    transition: "background 150ms",
+                  }}
+                    onMouseEnter={e => e.target.style.background = "var(--blue-hover)"}
+                    onMouseLeave={e => e.target.style.background = "var(--blue)"}
+                  >
+                    Save Changes
+                  </button>
+                </div>
               </div>
             </div>
-            <div style={{ display: "grid", gap: "1rem" }}>
-              <div>
-                <label style={{ display: "block", fontSize: "0.9rem", fontWeight: "500", marginBottom: "0.5rem" }}>Name</label>
-                <input
-                  type="text"
-                  defaultValue={user?.name}
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    border: "1px solid var(--border)",
-                    borderRadius: "0.375rem",
-                    fontSize: "0.95rem",
-                  }}
-                />
-              </div>
-              <div>
-                <label style={{ display: "block", fontSize: "0.9rem", fontWeight: "500", marginBottom: "0.5rem" }}>Email</label>
-                <input
-                  type="email"
-                  defaultValue={user?.email || user?.alumniEmailId}
-                  style={{
-                    width: "100%",
-                    padding: "0.75rem",
-                    border: "1px solid var(--border)",
-                    borderRadius: "0.375rem",
-                    fontSize: "0.95rem",
-                  }}
-                />
+
+            {/* Password & Security */}
+            <div className="settings-card">
+              <div className="settings-card-header">
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "var(--blue-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Lock size={18} style={{ color: "var(--blue)" }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)", margin: 0 }}>Password &amp; Security</h3>
+                  <p style={{ fontSize: 13, color: "var(--sub)", margin: "2px 0 0" }}>Change your password and manage security settings</p>
+                </div>
               </div>
               <button style={{
-                padding: "0.75rem 1.5rem",
-                background: "var(--accent)",
-                color: "white",
-                border: "none",
-                borderRadius: "0.375rem",
+                padding: "10px 20px",
+                background: "transparent",
+                color: "var(--blue)",
+                border: "1.5px solid var(--blue)",
+                borderRadius: 8,
                 cursor: "pointer",
-                fontWeight: "500",
-                marginTop: "0.5rem",
+                fontSize: 14,
+                fontWeight: 600,
               }}>
-                Save Changes
+                Change Password
+              </button>
+            </div>
+
+            {/* Logout */}
+            <div className="settings-card">
+              <div className="settings-card-header">
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "#FFF1F2", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <LogOut size={18} style={{ color: "var(--red)" }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)", margin: 0 }}>Sign Out</h3>
+                  <p style={{ fontSize: 13, color: "var(--sub)", margin: "2px 0 0" }}>Sign out from your current session</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                style={{
+                  padding: "10px 20px",
+                  background: "var(--red)",
+                  color: "white",
+                  border: "none",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+              >
+                Sign Out
               </button>
             </div>
           </div>
+        )}
 
-          <div style={{
-            padding: "1.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "0.5rem",
-            background: "var(--paper)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-              <Lock size={20} style={{ color: "var(--accent)" }} />
-              <div>
-                <h3 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "0.25rem" }}>Password & Security</h3>
-                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>Change your password and manage security settings</p>
+        {/* ── Privacy Settings ── */}
+        {activeTab === "privacy" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div className="settings-card">
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)", margin: "0 0 16px" }}>Profile Visibility</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {[
+                  { value: "public", label: "Public", desc: "Visible to anyone on the internet" },
+                  { value: "alumni-only", label: "Alumni Only", desc: "Visible to registered IITG alumni" },
+                  { value: "private", label: "Private", desc: "Only visible to you" },
+                ].map(option => (
+                  <label key={option.value} style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    padding: "12px 16px",
+                    border: `1.5px solid ${settings.profileVisibility === option.value ? "var(--blue)" : "var(--rule)"}`,
+                    borderRadius: 10,
+                    cursor: "pointer",
+                    background: settings.profileVisibility === option.value ? "var(--blue-light)" : "var(--surface)",
+                    transition: "border-color 150ms, background 150ms",
+                  }}>
+                    <input
+                      type="radio"
+                      name="profileVisibility"
+                      value={option.value}
+                      checked={settings.profileVisibility === option.value}
+                      onChange={(e) => handleSelectChange("profileVisibility", e.target.value)}
+                      style={{ accentColor: "var(--blue)", width: 16, height: 16, cursor: "pointer" }}
+                    />
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>{option.label}</div>
+                      <div style={{ fontSize: 12, color: "var(--sub)", marginTop: 1 }}>{option.desc}</div>
+                    </div>
+                  </label>
+                ))}
               </div>
             </div>
-            <button style={{
-              padding: "0.75rem 1.5rem",
-              background: "transparent",
-              color: "var(--accent)",
-              border: "1px solid var(--accent)",
-              borderRadius: "0.375rem",
-              cursor: "pointer",
-              fontWeight: "500",
-            }}>
-              Change Password
-            </button>
-          </div>
 
-          <div style={{
-            padding: "1.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "0.5rem",
-            background: "var(--paper)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-              <LogOut size={20} style={{ color: "#dc2626" }} />
-              <div>
-                <h3 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "0.25rem" }}>Logout</h3>
-                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>Sign out from your account</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: "0.75rem 1.5rem",
-                background: "#dc2626",
-                color: "white",
-                border: "none",
-                borderRadius: "0.375rem",
-                cursor: "pointer",
-                fontWeight: "500",
-              }}
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Privacy Settings */}
-      {activeTab === "privacy" && (
-        <div style={{ display: "grid", gap: "1.5rem" }}>
-          <div style={{
-            padding: "1.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "0.5rem",
-            background: "var(--paper)",
-          }}>
-            <h3 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "1.5rem" }}>Profile Visibility</h3>
-            <div style={{ display: "grid", gap: "1rem" }}>
-              {["public", "alumni-only", "private"].map(option => (
-                <label key={option} style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  padding: "0.75rem",
-                  border: "1px solid var(--border)",
-                  borderRadius: "0.375rem",
-                  cursor: "pointer",
-                }}>
-                  <input
-                    type="radio"
-                    name="profileVisibility"
-                    value={option}
-                    checked={settings.profileVisibility === option}
-                    onChange={(e) => handleSelectChange("profileVisibility", e.target.value)}
-                    style={{ cursor: "pointer" }}
-                  />
-                  <span style={{ textTransform: "capitalize", fontWeight: "500" }}>{option.replace("-", " ")}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div style={{
-            padding: "1.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "0.5rem",
-            background: "var(--paper)",
-          }}>
-            <h3 style={{ fontSize: "1rem", fontWeight: "600", marginBottom: "1.5rem" }}>Contact Information</h3>
-            <div style={{ display: "grid", gap: "1rem" }}>
-              <label style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0.75rem",
-                border: "1px solid var(--border)",
-                borderRadius: "0.375rem",
-              }}>
-                <span style={{ fontWeight: "500" }}>Show email on profile</span>
-                <input
-                  type="checkbox"
+            <div className="settings-card">
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)", margin: "0 0 16px" }}>Contact Information</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <ToggleRow
+                  label="Show email on profile"
+                  description="Let others see your email address"
                   checked={settings.showEmail}
                   onChange={() => handleToggle("showEmail")}
-                  style={{ cursor: "pointer", width: "1.25rem", height: "1.25rem" }}
                 />
-              </label>
-              <label style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0.75rem",
-                border: "1px solid var(--border)",
-                borderRadius: "0.375rem",
-              }}>
-                <span style={{ fontWeight: "500" }}>Allow direct messages</span>
-                <input
-                  type="checkbox"
+                <ToggleRow
+                  label="Allow direct messages"
+                  description="Let alumni send you direct messages"
                   checked={settings.allowMessages}
                   onChange={() => handleToggle("allowMessages")}
-                  style={{ cursor: "pointer", width: "1.25rem", height: "1.25rem" }}
                 />
-              </label>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Notification Settings */}
-      {activeTab === "notifications" && (
-        <div style={{ display: "grid", gap: "1.5rem" }}>
-          <div style={{
-            padding: "1.5rem",
-            border: "1px solid var(--border)",
-            borderRadius: "0.5rem",
-            background: "var(--paper)",
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-              <Bell size={20} style={{ color: "var(--accent)" }} />
-              <h3 style={{ fontSize: "1rem", fontWeight: "600" }}>Email Notifications</h3>
-            </div>
-            <div style={{ display: "grid", gap: "1rem" }}>
-              <label style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0.75rem",
-                border: "1px solid var(--border)",
-                borderRadius: "0.375rem",
-              }}>
-                <span style={{ fontWeight: "500" }}>Connection requests</span>
-                <input
-                  type="checkbox"
+        {/* ── Notification Settings ── */}
+        {activeTab === "notifications" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div className="settings-card">
+              <div className="settings-card-header">
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "var(--blue-light)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Bell size={18} style={{ color: "var(--blue)" }} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: 16, fontWeight: 600, color: "var(--ink)", margin: 0 }}>Email Notifications</h3>
+                  <p style={{ fontSize: 13, color: "var(--sub)", margin: "2px 0 0" }}>Choose what you'd like to be notified about</p>
+                </div>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <ToggleRow
+                  label="Connection requests"
+                  description="When someone wants to connect with you"
                   checked={settings.connectionRequests}
                   onChange={() => handleToggle("connectionRequests")}
-                  style={{ cursor: "pointer", width: "1.25rem", height: "1.25rem" }}
                 />
-              </label>
-              <label style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0.75rem",
-                border: "1px solid var(--border)",
-                borderRadius: "0.375rem",
-              }}>
-                <span style={{ fontWeight: "500" }}>Mentorship offers</span>
-                <input
-                  type="checkbox"
+                <ToggleRow
+                  label="Mentorship offers"
+                  description="When an alumni offers to mentor you"
                   checked={settings.mentorshipOffers}
                   onChange={() => handleToggle("mentorshipOffers")}
-                  style={{ cursor: "pointer", width: "1.25rem", height: "1.25rem" }}
                 />
-              </label>
-              <label style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "0.75rem",
-                border: "1px solid var(--border)",
-                borderRadius: "0.375rem",
-              }}>
-                <span style={{ fontWeight: "500" }}>Weekly news digest</span>
-                <input
-                  type="checkbox"
+                <ToggleRow
+                  label="Weekly news digest"
+                  description="A summary of network activity every Monday"
                   checked={settings.newsDigest}
                   onChange={() => handleToggle("newsDigest")}
-                  style={{ cursor: "pointer", width: "1.25rem", height: "1.25rem" }}
                 />
-              </label>
+              </div>
             </div>
-          </div>
 
-          <button style={{
-            padding: "0.75rem 1.5rem",
-            background: "var(--accent)",
-            color: "white",
-            border: "none",
-            borderRadius: "0.375rem",
-            cursor: "pointer",
-            fontWeight: "500",
-          }}>
-            Save Preferences
-          </button>
-        </div>
-      )}
+            <button style={{
+              padding: "11px 28px",
+              background: "var(--blue)",
+              color: "white",
+              border: "none",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontSize: 14,
+              fontWeight: 600,
+              alignSelf: "flex-start",
+              transition: "background 150ms",
+            }}
+              onMouseEnter={e => e.target.style.background = "var(--blue-hover)"}
+              onMouseLeave={e => e.target.style.background = "var(--blue)"}
+            >
+              Save Preferences
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

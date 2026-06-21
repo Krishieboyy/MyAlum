@@ -275,36 +275,34 @@ export default function GlobePage() {
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", transition: "background 300ms" }}>
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "32px 24px" }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }}>
 
         {/* Header */}
         <div style={{ marginBottom: 28, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-              <GlobeIcon style={{ width: 28, height: 28, color: "var(--blue)" }} />
-              <h1 style={{ ...serif, fontSize: 28, fontWeight: 600, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+              <GlobeIcon style={{ width: 30, height: 30, color: "var(--blue)" }} />
+              <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 36, fontWeight: 700, color: "var(--ink)", margin: 0, letterSpacing: "-0.025em", lineHeight: 1.1 }}>
                 Global Alumni Network
               </h1>
             </div>
-            <p style={{ fontSize: 14, color: "var(--sub)", margin: 0 }}>
+            <p style={{ fontSize: 16, color: "var(--sub)", margin: 0, lineHeight: 1.5 }}>
               Interactive 3D representation of where IIT Guwahati graduates are making an impact worldwide
             </p>
           </div>
           
           {/* Legend indicator */}
-          <div style={{ display: "flex", gap: 16, fontSize: 12, color: "var(--sub)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ff5500" }}></span>
-              <span>High Density</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#facc15" }}></span>
-              <span>Medium Density</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#00f0ff" }}></span>
-              <span>Low Density</span>
-            </div>
+          <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            {[
+              { color: "#ff5500", label: "High density" },
+              { color: "#facc15", label: "Medium density" },
+              { color: "#00f0ff", label: "Low density" },
+            ].map(({ color, label }) => (
+              <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 20, fontSize: 12, fontWeight: 500, color: "var(--sub)" }}>
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
+                {label}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -386,9 +384,9 @@ export default function GlobePage() {
              <div style={{
               background: "var(--surface)",
               border: "1px solid var(--rule)",
-              borderRadius: 8,
+              borderRadius: "var(--radius-card)",
               padding: 16,
-              boxShadow: "0 1px 3px 0 rgba(0,0,0,0.04), 0 1px 2px 0 rgba(0,0,0,0.02)"
+              boxShadow: "0 1px 2px rgba(0,0,0,.04)"
             }}>
               <button
                 onClick={() => setShowFilters(!showFilters)}

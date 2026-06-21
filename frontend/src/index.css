@@ -7,15 +7,64 @@
 }
 
 :root {
-  --paper:   #F8FAFC;    /* Slate-50: professional light gray background */
-  --surface: #FFFFFF;    /* White card background */
-  --ink:     #0F172A;    /* Slate-900: very clean dark text */
-  --blue:    #1B3A66;    /* IITG deep blue */
-  --amber:   #C2772E;    /* IITG accent amber */
-  --green:   #16A34A;    /* Clean emerald-600 */
-  --red:     #DC2626;    /* Clean red-600 */
-  --rule:    #E2E8F0;    /* Slate-200: subtle gray border */
-  --sub:     #64748B;    /* Slate-500: muted gray subtext */
+  /* ── Brand ── */
+  --blue:          #1E4B87;   /* Primary brand — IITG blue */
+  --blue-hover:    #173B6A;   /* Primary hover */
+  --blue-light:    #EEF3FB;   /* Tinted background for blue elements */
+
+  /* ── Backgrounds ── */
+  --paper:         #F8FAFC;   /* Page background */
+  --surface:       #FFFFFF;   /* Card background */
+
+  /* ── Text ── */
+  --ink:           #0F172A;   /* Primary text */
+  --sub:           #64748B;   /* Secondary text */
+  --muted:         #94A3B8;   /* Tertiary / placeholder */
+
+  /* ── Borders ── */
+  --rule:          #E2E8F0;   /* Default border */
+  --rule-strong:   #CBD5E1;   /* Hover border */
+
+  /* ── Semantic ── */
+  --amber:         #D4A017;   /* Accent gold */
+  --amber-light:   #FEF9EC;
+  --green:         #16A34A;
+  --green-light:   #F0FDF4;
+  --red:           #DC2626;
+  --red-light:     #FFF1F2;
+
+  /* ── Spacing / Shape ── */
+  --radius-sm:     6px;
+  --radius-md:     10px;
+  --radius-card:   12px;
+  --radius-lg:     16px;
+
+  /* ── Nav ── */
+  --nav-height:    58px;
+}
+
+/* ── Dark Mode ── */
+[data-theme="dark"] {
+  --blue:          #3B82F6;   /* Brighter blue for dark backgrounds */
+  --blue-hover:    #60A5FA;
+  --blue-light:    #1E3A5F;
+
+  --paper:         #0F172A;   /* Slate-900 */
+  --surface:       #1E293B;   /* Slate-800 */
+
+  --ink:           #F1F5F9;   /* Near-white text */
+  --sub:           #94A3B8;   /* Slate-400 */
+  --muted:         #64748B;   /* Slate-500 */
+
+  --rule:          #334155;   /* Slate-700 */
+  --rule-strong:   #475569;   /* Slate-600 */
+
+  --amber:         #FBBF24;
+  --amber-light:   #292116;
+  --green:         #34D399;
+  --green-light:   #0A2E1C;
+  --red:           #F87171;
+  --red-light:     #2D1515;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -25,14 +74,16 @@ html, body {
   font-family: "Inter", "Public Sans", system-ui, sans-serif;
   background: var(--paper);
   color: var(--ink);
-  font-size: 15px; /* Incremented body text size */
-  line-height: 1.6; /* Improved line height */
+  font-size: 16px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 250ms ease, color 250ms ease;
 }
 
 #root { width: 100%; min-height: 100vh; }
 
-/* ── Typography split ── */
+/* ── Typography helpers ── */
 .serif { font-family: "Inter", "Source Serif 4", Georgia, serif; }
 .mono  {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
@@ -47,8 +98,8 @@ html, body {
 
 /* ── Shimmer & Fade-in Animations ── */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
 .animate-shimmer {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
@@ -57,39 +108,36 @@ html, body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in {
-  animation: fadeIn 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: fadeIn 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* ── Record card: hairline border, soft shadow, hover float ── */
+/* ── Record card: consistent border, shadow, hover float ── */
 .record-card {
   background: var(--surface);
   border: 1px solid var(--rule);
-  border-radius: 8px; /* Modern border radius */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.02); /* Subtle premium shadow */
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
   transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   display: block;
   color: inherit;
 }
 .record-card:hover {
-  border-color: #CBD5E1; /* Slate-300 on hover */
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px -8px rgba(0,0,0,0.08), 0 4px 12px -2px rgba(0,0,0,0.03);
+  border-color: var(--rule-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -6px rgba(0,0,0,.08), 0 2px 8px -2px rgba(0,0,0,.04);
 }
 
+/* ── Premium button micro-interactions ── */
 .btn-premium {
-  transition: background-color 150ms ease, transform 100ms ease, border-color 150ms ease;
+  transition: background-color 150ms ease, transform 100ms ease, border-color 150ms ease, opacity 150ms ease;
 }
-.btn-premium:hover {
-  filter: brightness(0.96);
-}
-.btn-premium:active {
-  transform: scale(0.97);
-}
+.btn-premium:hover  { filter: brightness(0.95); }
+.btn-premium:active { transform: scale(0.97); }
 
 /* ── Nav link with draw-in underline ── */
 .nav-link {
@@ -97,17 +145,17 @@ html, body {
   align-items: center;
   text-decoration: none;
   position: relative;
-  padding-bottom: 1px;
   transition: color 120ms;
 }
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: -3px;
   left: 0;
   width: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.75);
+  height: 2.5px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 2px;
   transition: width 180ms ease;
 }
 .nav-link.active::after { width: 100%; }
@@ -115,26 +163,109 @@ html, body {
 
 /* ── Category badge ── */
 .badge {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 3px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 5px;
   border: 1px solid;
   display: inline-block;
   line-height: 1.6;
-  font-variant-numeric: tabular-nums;
 }
 
 /* ── Hairline rule ── */
 .rule { height: 1px; background: var(--rule); }
 
+/* ── Custom Toggle Switch ── */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 150ms, background 150ms;
+}
+.toggle-wrapper:hover {
+  border-color: var(--rule-strong);
+  background: var(--paper);
+}
+.toggle {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: #CBD5E1;
+  border-radius: 11px;
+  transition: background 200ms ease;
+  cursor: pointer;
+}
+.toggle input:checked + .toggle-track {
+  background: var(--blue);
+}
+.toggle-track::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 200ms ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.toggle input:checked + .toggle-track::before {
+  transform: translateX(18px);
+}
+
+/* ── Settings card ── */
+.settings-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  *, .record-card, .nav-link::after {
+  *, .record-card, .nav-link::after, .toggle-track, .toggle-track::before {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ── Dark mode shimmer ── */
+[data-theme="dark"] .animate-shimmer {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* ── Dark mode navbar ── */
+[data-theme="dark"] nav {
+  background: #0B1120 !important;
+  border-bottom-color: rgba(255,255,255,0.06) !important;
 }

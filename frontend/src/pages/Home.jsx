@@ -174,8 +174,8 @@ function AlumniSpotlight() {
   return (
     <div className="record-card animate-fade-in" style={{ padding: 20 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-        <Sparkles size={16} style={{ color: "var(--amber)" }} />
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em", ...mono }}>
+        <Sparkles size={15} style={{ color: "var(--amber)" }} />
+        <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", margin: 0 }}>
           Alumni Spotlight
         </h3>
       </div>
@@ -239,21 +239,21 @@ export default function Home() {
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }} className="animate-fade-in">
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }} className="animate-fade-in">
 
         {/* Header with stats */}
         <div style={{ marginBottom: 32 }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
-              <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 32, fontWeight: 700, color: "var(--ink)", margin: "0 0 6px", letterSpacing: "-0.02em" }}>
+              <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 40, fontWeight: 700, color: "var(--ink)", margin: "0 0 8px", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
                 Alumni Network
               </h1>
-              <p style={{ fontSize: 15, color: "var(--sub)", margin: 0 }}>
+              <p style={{ fontSize: 16, color: "var(--sub)", margin: 0, lineHeight: 1.5 }}>
                 Discover achievements, opportunities, and connections from IIT Guwahati alumni
               </p>
             </div>
-            <span style={{ ...mono, fontSize: 11, color: "var(--sub)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }).toUpperCase()}
+            <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap", paddingTop: 8 }}>
+              {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
             </span>
           </div>
 
@@ -261,7 +261,7 @@ export default function Home() {
           {loading ? (
             <StatsBarSkeleton />
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
               {[
                 { label: "Total Alumni", value: stats.totalAlumni.toLocaleString(), icon: Users, color: "#1e40af", bg: "#eff6ff" },
                 { label: "Countries", value: stats.countries, icon: Globe, color: "#166534", bg: "#f0fdf4" },
@@ -271,25 +271,26 @@ export default function Home() {
                 <div key={label} style={{
                   background: "var(--surface)",
                   border: "1px solid var(--rule)",
-                  borderRadius: 6,
-                  padding: "14px 16px",
+                  borderRadius: "var(--radius-card)",
+                  padding: "16px 20px",
                   display: "flex",
                   alignItems: "center",
-                  gap: 12,
+                  gap: 14,
+                  boxShadow: "0 1px 2px rgba(0,0,0,.04)"
                 }}>
                   <div style={{
-                    width: 38, height: 38, borderRadius: 6,
+                    width: 44, height: 44, borderRadius: 10,
                     background: bg,
                     display: "flex", alignItems: "center", justifyContent: "center",
                     color: color, flexShrink: 0
                   }}>
-                    <Icon size={18} />
+                    <Icon size={20} />
                   </div>
                   <div>
-                    <div style={{ fontSize: 18, fontWeight: 600, color: "var(--ink)" }}>
+                    <div style={{ fontSize: 22, fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
                       {value}
                     </div>
-                    <div style={{ ...mono, fontSize: 9.5, color: "var(--sub)", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                    <div style={{ fontSize: 13, color: "var(--sub)", fontWeight: 500, marginTop: 2 }}>
                       {label}
                     </div>
                   </div>
@@ -303,23 +304,21 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
           
           {/* Main Feed Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 24, minWidth: 0 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 28, minWidth: 0 }}>
             {/* Featured story */}
             {featured && (
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                  <Sparkles style={{ width: 16, height: 16, color: "var(--amber)" }} />
-                  <span style={{ ...mono, fontSize: 11, color: "var(--amber)", letterSpacing: "0.08em", fontWeight: 600, textTransform: "uppercase" }}>Featured</span>
+                  <Sparkles style={{ width: 15, height: 15, color: "var(--amber)" }} />
+                  <span style={{ fontSize: 13, color: "var(--amber)", fontWeight: 600 }}>Featured Story</span>
                 </div>
                 {loading ? <NewsCardSkeleton /> : <NewsCard item={featured} large />}
               </div>
             )}
 
-            {/* Section divider */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, borderTop: "1px solid var(--rule)", paddingTop: 20 }}>
               <TrendingUp style={{ width: 16, height: 16, color: "var(--blue)" }} />
-              <span style={{ ...mono, fontSize: 11, color: "var(--ink)", letterSpacing: "0.1em", fontWeight: 600, textTransform: "uppercase" }}>Recent Updates</span>
-              <div className="rule" style={{ flex: 1 }} />
+              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>Recent Updates</span>
             </div>
 
             {/* News grid */}
@@ -343,9 +342,9 @@ export default function Home() {
             {/* Explore quick links */}
             <div className="record-card" style={{ padding: 20 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                <Rocket size={16} style={{ color: "var(--blue)" }} />
-                <h3 style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", margin: 0, textTransform: "uppercase", letterSpacing: "0.06em", ...mono }}>
-                  Resources & Links
+                <Rocket size={15} style={{ color: "var(--blue)" }} />
+                <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", margin: 0 }}>
+                  Resources &amp; Links
                 </h3>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -371,10 +370,10 @@ export default function Home() {
         {/* CTA Section for logged-out users */}
         {!user && (
           <div style={{
-            marginTop: 40,
-            padding: "24px",
-            background: "linear-gradient(135deg, var(--blue) 0%, rgba(0, 51, 102, 0.8) 100%)",
-            borderRadius: 6,
+            marginTop: 48,
+            padding: "32px",
+            background: "linear-gradient(135deg, var(--blue) 0%, #0d2a52 100%)",
+            borderRadius: "var(--radius-card)",
             textAlign: "center",
             color: "#fff",
           }}>
