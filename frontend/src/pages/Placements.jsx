@@ -31,11 +31,8 @@ export default function Placements() {
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px" }}>
 
         {/* ── Header ── */}
-        <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 4 }}>
-          <h1 style={{ ...serif, fontSize: 20, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>Placements</h1>
-          <span style={{ ...mono, fontSize: 10.5, color: "var(--sub)" }}>— referrals & opportunities shared by alumni</span>
-        </div>
-        <p style={{ fontSize: 13, color: "var(--sub)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 520 }}>
+        <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", color: "var(--ink)", margin: "0 0 8px" }}>Placements</h1>
+        <p style={{ fontSize: 15, color: "var(--sub)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 560 }}>
           Internships and full-time roles posted by IITG alumni. Reach out through the alumni portal for referrals.
         </p>
         <div className="rule" style={{ marginBottom: 20 }} />

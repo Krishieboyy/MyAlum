@@ -6,6 +6,7 @@ import { serif, mono, avatarBg } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import CompanyLogo from "../components/CompanyLogo";
 import { NewsCardSkeleton, StatsBarSkeleton } from "../components/SkeletonLoader";
+import HeroSlideshow from "../components/HeroSlideshow";
 
 const TAG_COLOR = {
   RECOGNITION: ["#EEF2F8", "#1B3A66", "#B8C8DF"],
@@ -241,63 +242,9 @@ export default function Home() {
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }} className="animate-fade-in">
 
-        {/* Header with stats */}
+        {/* Hero slideshow */}
         <div style={{ marginBottom: 32 }}>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
-            <div>
-              <h1 style={{ fontFamily: "var(--font-sans)", fontSize: 40, fontWeight: 700, color: "var(--ink)", margin: "0 0 8px", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
-                Alumni Network
-              </h1>
-              <p style={{ fontSize: 16, color: "var(--sub)", margin: 0, lineHeight: 1.5 }}>
-                Discover achievements, opportunities, and connections from IIT Guwahati alumni
-              </p>
-            </div>
-            <span style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap", paddingTop: 8 }}>
-              {new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}
-            </span>
-          </div>
-
-          {/* Stats bar */}
-          {loading ? (
-            <StatsBarSkeleton />
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
-              {[
-                { label: "Total Alumni", value: stats.totalAlumni.toLocaleString(), icon: Users, color: "#1e40af", bg: "#eff6ff" },
-                { label: "Countries", value: stats.countries, icon: Globe, color: "#166534", bg: "#f0fdf4" },
-                { label: "Companies", value: stats.companies.toLocaleString(), icon: Building2, color: "#92400e", bg: "#fef3c7" },
-                { label: "Founders", value: stats.founders, icon: Rocket, color: "#9f1239", bg: "#fff1f2" },
-              ].map(({ label, value, icon: Icon, color, bg }) => (
-                <div key={label} style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--rule)",
-                  borderRadius: "var(--radius-card)",
-                  padding: "16px 20px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 14,
-                  boxShadow: "0 1px 2px rgba(0,0,0,.04)"
-                }}>
-                  <div style={{
-                    width: 44, height: 44, borderRadius: 10,
-                    background: bg,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: color, flexShrink: 0
-                  }}>
-                    <Icon size={20} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 22, fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
-                      {value}
-                    </div>
-                    <div style={{ fontSize: 13, color: "var(--sub)", fontWeight: 500, marginTop: 2 }}>
-                      {label}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <HeroSlideshow />
         </div>
 
         {/* Main Content Layout - Split Screen on Desktop */}
@@ -308,29 +255,40 @@ export default function Home() {
             {/* Featured story */}
             {featured && (
               <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                  <Sparkles style={{ width: 15, height: 15, color: "var(--amber)" }} />
-                  <span style={{ fontSize: 13, color: "var(--amber)", fontWeight: 600 }}>Featured Story</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 16 }}>
+                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 9, background: "rgba(194,119,46,0.12)", flexShrink: 0 }}>
+                    <Sparkles style={{ width: 18, height: 18, color: "var(--amber)" }} />
+                  </span>
+                  <h2 style={{ fontFamily: "var(--font-sans)", fontSize: 26, fontWeight: 700, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+                    Featured Story
+                  </h2>
                 </div>
                 {loading ? <NewsCardSkeleton /> : <NewsCard item={featured} large />}
               </div>
             )}
 
-            <div style={{ display: "flex", alignItems: "center", gap: 12, borderTop: "1px solid var(--rule)", paddingTop: 20 }}>
-              <TrendingUp style={{ width: 16, height: 16, color: "var(--blue)" }} />
-              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>Recent Updates</span>
-            </div>
+            {/* Recent Updates section */}
+            <div style={{ borderTop: "1px solid var(--rule)", marginTop: 16, paddingTop: 40 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 18 }}>
+                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 9, background: "rgba(27,58,102,0.10)", flexShrink: 0 }}>
+                  <TrendingUp style={{ width: 18, height: 18, color: "var(--blue)" }} />
+                </span>
+                <h2 style={{ fontFamily: "var(--font-sans)", fontSize: 26, fontWeight: 700, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+                  Recent Updates
+                </h2>
+              </div>
 
-            {/* News grid */}
-            {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {[1, 2].map(i => <NewsCardSkeleton key={i} />)}
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {rest.map(item => <NewsCard key={item.id} item={item} />)}
-              </div>
-            )}
+              {/* News grid */}
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {[1, 2].map(i => <NewsCardSkeleton key={i} />)}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {rest.map(item => <NewsCard key={item.id} item={item} />)}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Sidebar Column */}
@@ -381,7 +339,7 @@ export default function Home() {
               Join the Network
             </h2>
             <p style={{ fontSize: 14, margin: "0 0 16px", opacity: 0.9 }}>
-              Sign in to connect with alumni, access resources, and discover opportunities
+              Sign up to connect with alumni, access resources, and discover opportunities
             </p>
             <Link to="/login" className="btn-premium" style={{
               display: "inline-flex",
@@ -395,7 +353,7 @@ export default function Home() {
               fontWeight: 600,
               fontSize: 13,
             }}>
-              Sign In <ArrowRight style={{ width: 14, height: 14 }} />
+              Sign Up <ArrowRight style={{ width: 14, height: 14 }} />
             </Link>
           </div>
         )}
