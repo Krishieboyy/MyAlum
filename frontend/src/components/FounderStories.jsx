@@ -356,16 +356,17 @@ function QuoteIntro({ navOffset = "var(--nav-height, 56px)" }) {
       textAlign: "center", padding: "60px 28px", position: "relative",
     }}>
       <h2 style={{ ...serif, fontSize: "clamp(34px, 6vw, 76px)", fontWeight: 500, lineHeight: 1.12, letterSpacing: "-0.03em", color: "var(--ink)", margin: 0, maxWidth: 960 }}>
-        IIT Guwahati turns students<br />into <em style={{ fontStyle: "italic" }}>formidable founders</em>
-        <sup style={{ fontSize: "0.34em", verticalAlign: "super", color: "var(--sub)", fontStyle: "normal", marginLeft: 2 }}>[1]</sup>
+        <em style={{ fontStyle: "italic" }}>Students</em> today.{" "}
+          <em style={{ fontStyle: "italic" }}>Alumni</em> forever. One network.
+
       </h2>
       <div style={{ maxWidth: 540, marginTop: 44 }}>
         <p style={{ ...serif, fontStyle: "italic", fontSize: "clamp(15px, 1.7vw, 20px)", lineHeight: 1.65, color: "var(--sub)", margin: 0, textAlign: "left" }}>
-          <span style={{ marginRight: 8 }}>[1]</span>
-          “A formidable person is one who seems like they’ll get what they want, regardless of whatever obstacles are in the way.”
+          
+          “The delicate balance of mentoring someone is not creating them in your own image, but giving them the opportunity to create themselves.”
         </p>
         <p style={{ ...serif, fontStyle: "italic", fontSize: "clamp(14px, 1.5vw, 18px)", color: "var(--sub)", margin: "14px 0 0", textAlign: "right" }}>
-          — Paul Graham
+          — Steven Spielberg
         </p>
       </div>
       <ChevronDown style={{ position: "absolute", bottom: 30, width: 24, height: 24, color: "var(--sub)", opacity: 0.6, animation: "founderBounce 1.8s ease-in-out infinite" }} />
