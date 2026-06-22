@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import CompanyLogo from "../components/CompanyLogo";
 import { NewsCardSkeleton, StatsBarSkeleton } from "../components/SkeletonLoader";
 import HeroSlideshow from "../components/HeroSlideshow";
+import FounderStories from "../components/FounderStories";
 
 const TAG_COLOR = {
   RECOGNITION: ["#EEF2F8", "#1B3A66", "#B8C8DF"],
@@ -240,6 +241,10 @@ export default function Home() {
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+
+      {/* Founder Stories — pinned scrollytelling, right below the navbar */}
+      <FounderStories />
+
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }} className="animate-fade-in">
 
         {/* Hero slideshow */}
