@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import Globe from "globe.gl";
-import * as THREE from "three";
 import { alumni, branches } from "../data/mockData";
 import { getCoordinates } from "../data/geodata";
 import { serif, mono } from "../theme";
@@ -19,7 +18,19 @@ export default function GlobePage() {
   const globeContainerRef = useRef(null);
   const globeInstanceRef = useRef(null);
 
-  // Consumes clean global light-slate color system
+  // Vivid stepped density palette — clear distinction between city sizes
+  const densityColor = (count) => {
+    if (count >= 10) return "#ff2e63"; // hot magenta — major hub
+    if (count >= 6)  return "#ff8c42"; // orange — large
+    if (count >= 3)  return "#ffd23f"; // gold — medium
+    return "#21d4fd";                  // electric cyan — small
+  };
+  const densityRGB = (count) => {
+    if (count >= 10) return "255,46,99";
+    if (count >= 6)  return "255,140,66";
+    if (count >= 3)  return "255,210,63";
+    return "33,212,253";
+  };
 
   // Aggregate alumni by city
   const alumniByCity = useMemo(() => {
@@ -65,35 +76,45 @@ export default function GlobePage() {
   useEffect(() => {
     if (!globeContainerRef.current) return;
 
-    // Instantiate vanilla Globe.gl
+    // Instantiate vanilla Globe.gl with a full-color satellite texture
     const globe = Globe()(globeContainerRef.current)
-      .globeImageUrl("//unpkg.com/three-globe/example/img/earth-dark.jpg")
+      .globeImageUrl("//unpkg.com/three-globe/example/img/earth-blue-marble.jpg")
       .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png")
-      .backgroundColor("#020617") // matches Slate-950
+      .backgroundImageUrl("//unpkg.com/three-globe/example/img/night-sky.png")
+      .backgroundColor("#060a1a")
       .showAtmosphere(true)
-      .atmosphereColor("#0077ff") // Electric blue atmosphere glow
-      .atmosphereAltitude(0.18);
+      .atmosphereColor("#5eb3ff") // soft blue atmospheric halo
+      .atmosphereAltitude(0.22);
 
     globeInstanceRef.current = globe;
+
+    // Give the oceans a subtle shine and lift the terrain relief
+    const globeMaterial = globe.globeMaterial();
+    globeMaterial.bumpScale = 12;
+    if (globeMaterial.shininess !== undefined) globeMaterial.shininess = 8;
+
+    // Warm sun-like directional light for richer color
+    setTimeout(() => {
+      const scene = globe.scene();
+      const dirLight = scene.children.find(o => o.type === "DirectionalLight");
+      if (dirLight) { dirLight.intensity = 1.1; dirLight.position.set(1, 1, 1); }
+      const ambient = scene.children.find(o => o.type === "AmbientLight");
+      if (ambient) ambient.intensity = 1.4;
+    }, 0);
 
     globe.onGlobeReady(() => {
       setGlobeLoading(false);
     });
 
-    globe.onCustomLayerHover((obj) => {
-      if (globeContainerRef.current) {
-        globeContainerRef.current.style.cursor = obj ? "pointer" : "default";
-      }
-    });
-
-    // Configure controls
+    // Configure controls — wider zoom range
     const controls = globe.controls();
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.4;
+    controls.autoRotateSpeed = 0.35;
     controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.minDistance = 150;
-    controls.maxDistance = 550;
+    controls.dampingFactor = 0.06;
+    controls.minDistance = 110;  // zoom right down to city level
+    controls.maxDistance = 800;  // pull far out to see the whole planet
+    controls.zoomSpeed = 1.4;
 
     // Auto rotation pauses when user interacts
     const handleStartInteraction = () => {
@@ -128,12 +149,11 @@ export default function GlobePage() {
     };
   }, []);
 
-  // Update Globe custom layer (spikes, tooltips, events) when filtered data changes
+  // Update globe layers (bars, rings, labels) when filtered data changes
   useEffect(() => {
     const globe = globeInstanceRef.current;
     if (!globe) return;
 
-    // Format data points for Globe
     const globeData = filteredCities.map(city => ({
       lat: city.coords.lat,
       lng: city.coords.lng,
@@ -145,132 +165,71 @@ export default function GlobePage() {
 
     const maxAlumni = Math.max(...globeData.map(d => d.alumniCount), 1);
 
-    // Bind data to custom WebGL layer
-    globe.customLayerData(globeData);
-
-    // Setup custom glassmorphic HTML tooltips on hover
-    globe.customLayerLabel(d => `
+    const tooltip = (d) => `
       <div style="
-        background: rgba(11, 17, 34, 0.95);
-        border: 1px solid rgba(56, 189, 248, 0.4);
-        padding: 10px 14px;
-        border-radius: 8px;
-        color: #f1f5f9;
+        background: rgba(10, 14, 30, 0.94);
+        border: 1px solid rgba(${densityRGB(d.alumniCount)}, 0.6);
+        padding: 9px 13px; border-radius: 8px; color: #f1f5f9;
         font-family: sans-serif;
-        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        pointer-events: none;
+        box-shadow: 0 12px 36px rgba(0,0,0,0.7); pointer-events: none;
       ">
-        <div style="font-weight: 600; font-size: 14px; margin-bottom: 5px; color: #38bdf8; display: flex; align-items: center; gap: 6px;">
-          📍 ${d.city}, ${d.country}
+        <div style="font-weight: 600; font-size: 13.5px; margin-bottom: 4px;">${d.city}, ${d.country}</div>
+        <div style="font-size: 12px; color: #cbd5e1; font-family: monospace; display:flex; align-items:center; gap:6px;">
+          <span style="display:inline-block; width: 9px; height: 9px; border-radius: 50%; background: ${densityColor(d.alumniCount)}; box-shadow: 0 0 8px ${densityColor(d.alumniCount)};"></span>
+          <strong style="color:${densityColor(d.alumniCount)}">${d.alumniCount}</strong> ${d.alumniCount === 1 ? "alumnus" : "alumni"}
         </div>
-        <div style="font-size: 12px; color: #94a3b8; font-family: monospace; display: flex; align-items: center; gap: 6px;">
-          <span style="display:inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${d.alumniCount > 2 ? '#f59e0b' : '#38bdf8'};"></span>
-          <strong>${d.alumniCount}</strong> ${d.alumniCount === 1 ? 'Alumnus' : 'Alumni'}
-        </div>
-      </div>
-    `);
+      </div>`;
 
-    // Create glowing Cone spikes representing density
-    globe.customThreeObject(d => {
-      const ratio = d.alumniCount / maxAlumni;
-      
-      // Compute geometry sizes relative to density
-      const height = 12 + ratio * 48; // Spike height scales from 12 to 60
-      const radius = 1.4 + ratio * 2.2; // Base radius scales from 1.4 to 3.6
-
-      const geometry = new THREE.ConeGeometry(radius, height, 16, 16);
-      
-      // Shift origin to the base of the cone so scaling/growth anchors at the surface
-      geometry.translate(0, height / 2, 0);
-
-      // Vertex color height gradient calculation
-      const count = geometry.attributes.position.count;
-      const colors = new Float32Array(count * 3);
-
-      const baseColor = new THREE.Color("#003b8e"); // Slate/navy base
-      
-      let tipColorStr = "#00f0ff"; // Muted cyan for low density
-      if (ratio > 0.6) {
-        tipColorStr = "#ff5500"; // Vibrant crimson/orange for high density
-      } else if (ratio > 0.25) {
-        tipColorStr = "#facc15"; // Gold/yellow for medium density
-      }
-      const tipColor = new THREE.Color(tipColorStr);
-
-      for (let i = 0; i < count; i++) {
-        const y = geometry.attributes.position.getY(i);
-        const factor = Math.max(0, Math.min(1, y / height));
-        const color = baseColor.clone().lerp(tipColor, factor);
-        
-        colors[i * 3] = color.r;
-        colors[i * 3 + 1] = color.g;
-        colors[i * 3 + 2] = color.b;
-      }
-      geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-
-      const material = new THREE.MeshBasicMaterial({
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.85,
-        blending: THREE.AdditiveBlending, // Glow effect
-        side: THREE.DoubleSide,
-      });
-
-      const mesh = new THREE.Mesh(geometry, material);
-      
-      // Align Y axis to point outward (Z-axis in Globe.gl custom objects faces normal)
-      mesh.rotation.x = Math.PI / 2;
-      mesh.userData = { originalHeight: height };
-
-      // Initialize height scale at 0 for growth transition
-      mesh.scale.y = 0;
-
-      const group = new THREE.Group();
-      group.add(mesh);
-      group.__data = d;
-      mesh.__data = d;
-      return group;
-    })
-    .customThreeObjectUpdate((group, d) => {
-      // Position and orient the spikes on the globe surface
-      const { x, y, z } = globe.getCoords(d.lat, d.lng);
-      group.position.set(x, y, z);
-      const targetVec = new THREE.Vector3(x, y, z).multiplyScalar(1.5);
-      group.lookAt(targetVec);
-    });
-
-    // Handle clicks
-    globe.onCustomLayerClick(d => {
-      if (d) {
+    // ── Glowing density bars ──
+    globe
+      .pointsData(globeData)
+      .pointLat("lat")
+      .pointLng("lng")
+      .pointColor(d => densityColor(d.alumniCount))
+      .pointAltitude(d => 0.05 + (d.alumniCount / maxAlumni) * 0.5)
+      .pointRadius(d => 0.32 + (d.alumniCount / maxAlumni) * 0.55)
+      .pointResolution(18)
+      .pointsMerge(false)
+      .pointLabel(tooltip)
+      .onPointClick(d => {
+        if (!d) return;
         setSelectedCity(`${d.city}|${d.country}`);
-        // Center camera with smooth travel
-        globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.9 }, 1200);
-      }
-    });
-
-    // Animate spikes growing gradually
-    let progress = 0;
-    let frameId;
-    const animateSpikes = () => {
-      progress += 0.03; // increment scale factor
-      if (progress > 1) progress = 1;
-
-      globe.scene().traverse(obj => {
-        if (obj.isMesh && obj.userData && obj.userData.originalHeight) {
-          obj.scale.y = progress;
-        }
+        globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.5 }, 1100);
+      })
+      .onPointHover(obj => {
+        if (globeContainerRef.current) globeContainerRef.current.style.cursor = obj ? "pointer" : "grab";
       });
 
-      if (progress < 1) {
-        frameId = requestAnimationFrame(animateSpikes);
-      }
-    };
-    animateSpikes();
+    // ── Pulsing rings — denser cities pulse faster & wider ──
+    globe
+      .ringsData(globeData)
+      .ringLat("lat")
+      .ringLng("lng")
+      .ringColor(d => {
+        const rgb = densityRGB(d.alumniCount);
+        return (t) => `rgba(${rgb}, ${Math.sqrt(1 - t).toFixed(3)})`;
+      })
+      .ringMaxRadius(d => 1.4 + (d.alumniCount / maxAlumni) * 4)
+      .ringPropagationSpeed(2)
+      .ringRepeatPeriod(d => 1600 - (d.alumniCount / maxAlumni) * 900);
 
-    return () => {
-      cancelAnimationFrame(frameId);
-    };
+    // ── City labels riding on top of the bars ──
+    globe
+      .labelsData(globeData)
+      .labelLat("lat")
+      .labelLng("lng")
+      .labelText(d => d.city)
+      .labelSize(d => 0.5 + (d.alumniCount / maxAlumni) * 0.7)
+      .labelDotRadius(0)
+      .labelColor(d => `rgba(255,255,255,${0.55 + (d.alumniCount / maxAlumni) * 0.4})`)
+      .labelResolution(2)
+      .labelAltitude(d => 0.05 + (d.alumniCount / maxAlumni) * 0.5 + 0.012)
+      .labelIncludeDot(false)
+      .onLabelClick(d => {
+        if (!d) return;
+        setSelectedCity(`${d.city}|${d.country}`);
+        globe.pointOfView({ lat: d.lat, lng: d.lng, altitude: 1.5 }, 1100);
+      });
   }, [filteredCities]);
 
   return (
@@ -294,9 +253,10 @@ export default function GlobePage() {
           {/* Legend indicator */}
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             {[
-              { color: "#ff5500", label: "High density" },
-              { color: "#facc15", label: "Medium density" },
-              { color: "#00f0ff", label: "Low density" },
+              { color: "#ff2e63", label: "Major hub · 10+" },
+              { color: "#ff8c42", label: "Large · 6–9" },
+              { color: "#ffd23f", label: "Medium · 3–5" },
+              { color: "#21d4fd", label: "Small · 1–2" },
             ].map(({ color, label }) => (
               <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, padding: "4px 10px", background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 20, fontSize: 12, fontWeight: 500, color: "var(--sub)" }}>
                 <span style={{ width: 8, height: 8, borderRadius: "50%", background: color, flexShrink: 0 }} />
@@ -370,10 +330,10 @@ export default function GlobePage() {
               backdropFilter: "blur(6px)",
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)"
             }}>
-              <span style={{ fontWeight: 600, color: "#f1f5f9", marginBottom: 2 }}>🌐 CONTROLS & HUD</span>
-              <span>🖱️ Drag mouse to rotate globe</span>
-              <span>📜 Scroll mouse wheel to zoom</span>
-              <span>🔴 Hover on spikes for info · Click to expand</span>
+              <span style={{ fontWeight: 600, color: "#f1f5f9", marginBottom: 2 }}>🌐 CONTROLS</span>
+              <span>🖱️ Drag to rotate · scroll to zoom in/out</span>
+              <span>🏙️ Taller, warmer bars = more alumni</span>
+              <span>👆 Hover a city for details · click to expand</span>
             </div>
           </div>
 

@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { GraduationCap, Users, Shield, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { serif, mono } from "../theme";
+import Navbar from "../components/Navbar";
 
 export default function Login() {
   const { login } = useAuth();
@@ -33,14 +34,8 @@ export default function Login() {
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
 
-      {/* ── Top strip ── */}
-      <div style={{ background: "var(--blue)", padding: "14px 32px", display: "flex", alignItems: "center", gap: 12 }}>
-        <Link to="/" style={{ display: "flex", alignItems: "baseline", gap: 10, textDecoration: "none" }}>
-          <span style={{ ...serif, fontSize: 16, fontWeight: 500, color: "#fff" }}>MyAlum</span>
-          <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 13 }}>·</span>
-          <span style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.45)", letterSpacing: "0.1em" }}>IITG</span>
-        </Link>
-      </div>
+      {/* ── Navbar ── */}
+      <Navbar />
 
       {/* ── Card ── */}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" }}>
@@ -144,13 +139,6 @@ export default function Login() {
                 <ArrowRight style={{ width: 13, height: 13 }} />
               </button>
             </form>
-
-            {/* Demo notice */}
-            <div style={{ padding: "10px 24px 14px", borderTop: "1px solid var(--rule)" }}>
-              <p style={{ ...mono, fontSize: 10, color: "var(--sub)", margin: 0, textAlign: "center", letterSpacing: "0.05em" }}>
-                DEMO — no real authentication · credentials pre-filled
-              </p>
-            </div>
           </div>
 
           <p style={{ textAlign: "center", marginTop: 16, fontSize: 12, color: "var(--sub)" }}>

@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 const links = [
   { to: "/",           label: "Home"       },
   { to: "/directory",  label: "Directory"  },
-  { to: "/globe",      label: "Global Map" },
+  { to: "/globe",      label: "Global Network" },
   { to: "/resources",  label: "Resources"  },
   { to: "/placements", label: "Placements" },
 ];
@@ -58,7 +58,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav style={{ background: "var(--blue)", borderBottom: "1px solid rgba(255,255,255,0.08)", position: "sticky", top: 0, zIndex: 50 }}>
+    <nav style={{ background: "#0a0e1a", borderBottom: "1px solid rgba(255,255,255,0.08)", position: "sticky", top: 0, zIndex: 50 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 28px", display: "flex", alignItems: "center", height: "var(--nav-height)" }}>
 
         {/* Logo + Wordmark */}

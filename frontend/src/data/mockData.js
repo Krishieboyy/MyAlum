@@ -1,4 +1,4 @@
-export const alumni = [
+const curatedAlumni = [
   {
     id: 1,
     name: "Arjun Sharma",
@@ -522,6 +522,106 @@ export const alumni = [
     bio: "Developing core routing protocol features for 5G network switches.",
   },
 ];
+
+// ── Generated alumni — give cities realistic, varied density for the globe ──
+const CITY_WEIGHTS = {
+  "Bangalore": { n: 14, country: "India" },
+  "Mumbai": { n: 9, country: "India" },
+  "New Delhi": { n: 8, country: "India" },
+  "Hyderabad": { n: 7, country: "India" },
+  "Pune": { n: 6, country: "India" },
+  "Chennai": { n: 4, country: "India" },
+  "San Francisco": { n: 9, country: "USA" },
+  "New York": { n: 6, country: "USA" },
+  "Seattle": { n: 5, country: "USA" },
+  "San Jose": { n: 4, country: "USA" },
+  "Austin": { n: 3, country: "USA" },
+  "London": { n: 6, country: "UK" },
+  "Singapore": { n: 4, country: "Singapore" },
+  "Dubai": { n: 3, country: "UAE" },
+  "Toronto": { n: 3, country: "Canada" },
+  "Berlin": { n: 2, country: "Germany" },
+  "Zurich": { n: 2, country: "Switzerland" },
+  "Amsterdam": { n: 2, country: "Netherlands" },
+  "Sydney": { n: 2, country: "Australia" },
+  "Tokyo": { n: 2, country: "Japan" },
+};
+
+const FIRST = ["Aarav","Aditya","Ananya","Arnav","Diya","Ishaan","Kavya","Krishna","Meera","Neha","Nikhil","Pooja","Rahul","Riya","Rohit","Saanvi","Sahil","Tara","Varun","Yash","Aditi","Devansh","Ira","Kabir","Lakshmi","Manish","Naina","Om","Prerna","Siddharth","Tanvi","Ved","Anika","Dhruv","Gauri","Harsh","Jaya","Karan","Mira","Reyansh"];
+const LAST = ["Agarwal","Bhatt","Chauhan","Desai","Iyer","Jain","Khanna","Menon","Nanda","Patel","Rao","Saxena","Sharma","Singh","Verma","Banerjee","Chakraborty","Dutta","Ghosh","Joshi","Kulkarni","Malhotra","Pillai","Reddy","Shetty"];
+const COMPANIES = {
+  FOUNDER: ["Helix Labs","Nova Systems","Zenith AI","Kshitij Tech","Quanta Robotics"],
+  EMPLOYEE: ["Google","Microsoft","Amazon","Meta","Adobe","Salesforce","Stripe","Atlassian","Flipkart","Swiggy","Razorpay","Zomato"],
+  RESEARCHER: ["Stanford","ETH Zurich","Max Planck Institute","DeepMind","Bell Labs"],
+  BUSINESSMAN: ["Vega Group","Orion Holdings","Sterling Industries"],
+  "GOVT OFFICER": ["IAS","Ministry of Finance","RBI","ISRO"],
+  PROFESSOR: ["IIT Bombay","IISc Bangalore","NUS","University of Toronto"],
+};
+const ROLES = {
+  FOUNDER: ["Founder & CEO","Co-Founder","Founder & CTO"],
+  EMPLOYEE: ["Software Engineer","Senior Engineer","Engineering Manager","Product Manager","Data Scientist","Staff Engineer"],
+  RESEARCHER: ["Research Scientist","Postdoctoral Fellow","PhD Researcher"],
+  BUSINESSMAN: ["Managing Director","Director","Partner"],
+  "GOVT OFFICER": ["Joint Secretary","Deputy Director","Officer"],
+  PROFESSOR: ["Assistant Professor","Associate Professor","Professor"],
+};
+const GEN_CATS = ["FOUNDER","EMPLOYEE","EMPLOYEE","EMPLOYEE","RESEARCHER","BUSINESSMAN","GOVT OFFICER","PROFESSOR"];
+const GEN_BRANCHES = [
+  ["Computer Science & Engineering","CSE"],
+  ["Electronics & Communication Engineering","ECE"],
+  ["Mechanical Engineering","ME"],
+  ["Civil Engineering","CE"],
+  ["Chemical Engineering","CHE"],
+  ["Mathematics","MA"],
+  ["Physics","PH"],
+  ["Biotechnology","BT"],
+];
+
+// Deterministic pseudo-random so the dataset is stable across reloads
+let _seed = 12345;
+const rand = () => { _seed = (_seed * 1103515245 + 12345) & 0x7fffffff; return _seed / 0x7fffffff; };
+const pick = (arr) => arr[Math.floor(rand() * arr.length)];
+
+const generatedAlumni = [];
+let _gid = curatedAlumni.length + 1;
+Object.entries(CITY_WEIGHTS).forEach(([city, { n, country }]) => {
+  for (let i = 0; i < n; i++) {
+    const first = pick(FIRST), last = pick(LAST);
+    const cat = pick(GEN_CATS);
+    const [branch, code] = pick(GEN_BRANCHES);
+    const endYear = 2008 + Math.floor(rand() * 16);
+    const startYear = endYear - 4;
+    const company = pick(COMPANIES[cat]);
+    const role = pick(ROLES[cat]);
+    const isNRI = country !== "India";
+    generatedAlumni.push({
+      id: _gid++,
+      name: `${first} ${last}`,
+      linkedinUrl: `https://linkedin.com/in/${first.toLowerCase()}${last.toLowerCase()}`,
+      category: cat,
+      isNRI,
+      branch,
+      startYear,
+      endYear,
+      course: "B.Tech",
+      currentCompany: { name: company, position: role, startDate: `${endYear + 2}-06`, remarks: "" },
+      pastCompanies: [pick(COMPANIES.EMPLOYEE)],
+      currentCity: city,
+      currentCountry: country,
+      pastCities: ["Guwahati"],
+      phoneNumbers: [],
+      emailAddresses: [`${first.toLowerCase()}.${last.toLowerCase()}@example.com`],
+      alumniEmailId: `${first.toLowerCase()}.${last.toLowerCase()}@iitg.ac.in`,
+      alumniCardId: `IITG-${code}-${endYear}-${String(_gid).padStart(3, "0")}`,
+      campusActivities: [{ name: "Student Activity", category: "Club", position: "Member" }],
+      achievements: [],
+      avatar: `${first[0]}${last[0]}`,
+      bio: `${role} at ${company}, based in ${city}.`,
+    });
+  }
+});
+
+export const alumni = [...curatedAlumni, ...generatedAlumni];
 
 export const categoryColors = {
   FOUNDER: "bg-purple-100 text-purple-700",
