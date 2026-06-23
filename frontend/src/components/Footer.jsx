@@ -1,7 +1,5 @@
 import { sans } from "../theme";
 
-const FOOTER_BG = "#0a0e1a"; // dark navy — matches navbar
-
 const learnMore = [
   { label: "Alumni & External Relations", href: "#" },
   { label: "IIT Guwahati",                href: "#" },
@@ -41,7 +39,7 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer style={{ ...sans, background: FOOTER_BG, color: "#fff" }}>
+    <footer className="site-footer" style={{ ...sans }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 28px 20px" }}>
 
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 40 }}>

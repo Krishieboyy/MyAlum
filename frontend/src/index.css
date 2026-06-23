@@ -90,10 +90,29 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Dotted engineering-grid texture ── */
+/* ── Dotted engineering-grid texture (theme-aware) ── */
 .dotted-grid {
   background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
   background-size: 18px 18px;
+}
+[data-theme="dark"] .dotted-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px);
+}
+
+/* ── Themed footer (navy in light, near-black in dark) + subtle sheen ── */
+.site-footer {
+  position: relative;
+  color: #fff;
+  background:
+    radial-gradient(120% 140% at 15% -20%, rgba(255,255,255,0.07), transparent 60%),
+    rgb(0, 37, 63);
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+[data-theme="dark"] .site-footer {
+  background:
+    radial-gradient(120% 140% at 15% -20%, rgba(255,255,255,0.05), transparent 60%),
+    #0a0e14;
+  border-top: 1px solid rgba(255,255,255,0.07);
 }
 
 /* ── Shimmer & Fade-in Animations ── */
@@ -118,6 +137,7 @@ html, body {
 /* ── Record card: consistent border, shadow, hover float ── */
 .record-card {
   background: var(--surface);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.04), transparent 38%);
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
@@ -130,6 +150,15 @@ html, body {
   border-color: var(--rule-strong);
   transform: translateY(-2px);
   box-shadow: 0 8px 24px -6px rgba(0,0,0,.08), 0 2px 8px -2px rgba(0,0,0,.04);
+}
+/* Dark mode: subtle top highlight + deeper float for a glassy, appealing card */
+[data-theme="dark"] .record-card {
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 42%);
+  box-shadow: 0 1px 2px rgba(0,0,0,.4);
+}
+[data-theme="dark"] .record-card:hover {
+  border-color: var(--blue);
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,.7), 0 0 0 1px rgba(59,130,246,.15);
 }
 
 /* ── Premium button micro-interactions ── */
@@ -264,8 +293,14 @@ html, body {
   animation: shimmer 1.5s infinite linear;
 }
 
-/* ── Dark mode navbar ── */
+/* ── Glassy navbar (frosted, theme-aware) ── */
+nav {
+  background: rgb(0, 37, 63) !important;              /* light: solid navy blue */
+  border-bottom-color: rgba(255,255,255,0.12) !important;
+}
 [data-theme="dark"] nav {
-  background: #0B1120 !important;
-  border-bottom-color: rgba(255,255,255,0.06) !important;
+  background: rgba(0, 0, 0, 0.55) !important;         /* dark: black glass */
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+          backdrop-filter: saturate(160%) blur(18px);
+  border-bottom-color: rgba(255,255,255,0.08) !important;
 }

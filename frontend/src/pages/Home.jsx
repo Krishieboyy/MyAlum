@@ -177,7 +177,7 @@ function AlumniSpotlight() {
     <div className="record-card animate-fade-in" style={{ padding: 20 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
         <Sparkles size={15} style={{ color: "var(--amber)" }} />
-        <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", margin: 0 }}>
+        <h3 style={{ fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic", fontSize: 18, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
           Alumni Spotlight
         </h3>
       </div>
@@ -252,9 +252,9 @@ export default function Home() {
           <HeroSlideshow />
         </div>
 
-        {/* Main Content Layout - Split Screen on Desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
-          
+        {/* Main Content Layout - Full-width feed */}
+        <div>
+
           {/* Main Feed Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: 28, minWidth: 0 }}>
             {/* Featured story */}
@@ -264,7 +264,7 @@ export default function Home() {
                   <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 9, background: "rgba(194,119,46,0.12)", flexShrink: 0 }}>
                     <Sparkles style={{ width: 18, height: 18, color: "var(--amber)" }} />
                   </span>
-                  <h2 style={{ fontFamily: "var(--font-sans)", fontSize: 26, fontWeight: 700, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+                  <h2 style={{ fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic", fontSize: 29, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.03em" }}>
                     Featured Story
                   </h2>
                 </div>
@@ -278,7 +278,7 @@ export default function Home() {
                 <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 9, background: "rgba(27,58,102,0.10)", flexShrink: 0 }}>
                   <TrendingUp style={{ width: 18, height: 18, color: "var(--blue)" }} />
                 </span>
-                <h2 style={{ fontFamily: "var(--font-sans)", fontSize: 26, fontWeight: 700, color: "var(--ink)", margin: 0, letterSpacing: "-0.02em" }}>
+                <h2 style={{ fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic", fontSize: 29, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.03em" }}>
                   Recent Updates
                 </h2>
               </div>
@@ -293,39 +293,6 @@ export default function Home() {
                   {rest.map(item => <NewsCard key={item.id} item={item} />)}
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Sidebar Column */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            
-            {/* Spotlight Sidebar Widget */}
-            <AlumniSpotlight />
-
-            {/* Explore quick links */}
-            <div className="record-card" style={{ padding: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                <Rocket size={15} style={{ color: "var(--blue)" }} />
-                <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--ink)", margin: 0 }}>
-                  Resources &amp; Links
-                </h3>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {[
-                  { to: "/directory", label: "👥 Alumni Directory", desc: "12,400+ registered profiles" },
-                  { to: "/resources", label: "📚 Resources & Guides", desc: "Interview prep & notes" },
-                  { to: "/placements", label: "🚀 Opportunities", desc: "Job referrals & openings" },
-                ].map(({ to, label, desc }) => (
-                  <Link key={to} to={to} style={{ textDecoration: "none", display: "block" }} className="btn-premium">
-                    <p style={{ fontSize: 13, fontWeight: 600, color: "var(--blue)", margin: 0 }}>
-                      {label}
-                    </p>
-                    <p style={{ fontSize: 11, color: "var(--sub)", margin: "2px 0 0" }}>
-                      {desc}
-                    </p>
-                  </Link>
-                ))}
-              </div>
             </div>
           </div>
         </div>
