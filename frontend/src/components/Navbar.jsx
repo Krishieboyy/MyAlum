@@ -62,7 +62,7 @@ export default function Navbar() {
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 28px", display: "flex", alignItems: "center", height: "var(--nav-height)" }}>
 
         {/* Logo + Wordmark */}
-        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginRight: 40, flexShrink: 0 }}>
+        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flex: "1 1 0", minWidth: 0 }}>
           {/* Circular cropped logo */}
           <div style={{
             width: 30, height: 30,
@@ -89,17 +89,15 @@ export default function Navbar() {
           <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.1em", fontWeight: 600 }}>IITG</span>
         </Link>
 
-        {/* Nav links */}
+        {/* Nav links — centered */}
         <div style={{
           display: "flex",
           gap: 4,
-          flex: 1,
+          flex: "0 0 auto",
+          justifyContent: "center",
           alignItems: "center",
           height: "100%",
-          overflowX: "auto",
           whiteSpace: "nowrap",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
         }}>
           {links.map(({ to, label }) => {
             const active = pathname === to;
@@ -123,7 +121,7 @@ export default function Navbar() {
         </div>
 
         {/* Right side */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flex: "1 1 0", justifyContent: "flex-end", minWidth: 0 }}>
 
           {/* Dark mode toggle */}
           <button
