@@ -50,7 +50,7 @@
   --blue-light:    #1E3A5F;
 
   --paper:         #0F172A;   /* Slate-900 */
-  --surface:       #1E293B;   /* Slate-800 */
+  --surface:       rgba(12, 16, 26, 0.55);   /* black glassy translucent */
 
   --ink:           #F1F5F9;   /* Near-white text */
   --sub:           #94A3B8;   /* Slate-400 */
@@ -134,31 +134,42 @@ html, body {
   animation: fadeIn 280ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* ── Record card: consistent border, shadow, hover float ── */
+/* ── Card: navy (light) / black-glass (dark), with light text scoped inside ── */
 .record-card {
-  background: var(--surface);
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.04), transparent 38%);
-  border: 1px solid var(--rule);
+  /* light: solid navy to match the theme */
+  background: rgb(0, 37, 63);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.07), transparent 42%);
+  /* redefine text/border tokens so inner var(--ink)/var(--sub) become light */
+  --ink: #ffffff;
+  --sub: rgba(255,255,255,0.66);
+  --muted: rgba(255,255,255,0.48);
+  --rule: rgba(255,255,255,0.14);
+  --rule-strong: rgba(255,255,255,0.32);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius: var(--radius-card);
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  box-shadow: 0 2px 10px rgba(0,0,0,.18);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+          backdrop-filter: blur(10px) saturate(140%);
   transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   display: block;
-  color: inherit;
 }
 .record-card:hover {
-  border-color: var(--rule-strong);
+  border-color: rgba(255,255,255,0.3);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px -6px rgba(0,0,0,.08), 0 2px 8px -2px rgba(0,0,0,.04);
+  box-shadow: 0 12px 30px -8px rgba(0,0,0,.35);
 }
-/* Dark mode: subtle top highlight + deeper float for a glassy, appealing card */
+/* dark: translucent black glass */
 [data-theme="dark"] .record-card {
-  background-image: linear-gradient(180deg, rgba(255,255,255,0.06), transparent 42%);
-  box-shadow: 0 1px 2px rgba(0,0,0,.4);
+  background: rgba(8, 11, 18, 0.5);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.05), transparent 44%);
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,.5);
 }
 [data-theme="dark"] .record-card:hover {
   border-color: var(--blue);
-  box-shadow: 0 12px 32px -8px rgba(0,0,0,.7), 0 0 0 1px rgba(59,130,246,.15);
+  box-shadow: 0 14px 34px -8px rgba(0,0,0,.7), 0 0 0 1px rgba(59,130,246,.15);
 }
 
 /* ── Premium button micro-interactions ── */

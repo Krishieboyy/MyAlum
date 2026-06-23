@@ -279,7 +279,7 @@ export default function FounderStories() {
           <div style={{
             position: "relative", zIndex: 2,
             display: "grid", gridTemplateColumns: "1fr minmax(280px, 380px) 1fr",
-            gap: "clamp(40px, 5vw, 64px)", alignItems: "center",
+            gap: "clamp(16px, 2.5vw, 36px)", alignItems: "center",
             maxWidth: 1480, margin: "0 auto", width: "100%", padding: "0 48px",
             pointerEvents: "none",
           }}>

@@ -10,8 +10,8 @@ const SLIDES = [
     subtitle: "Discover achievements, opportunities, and connections from across the IITG community — all in one place.",
     cta: { label: "Explore Directory", to: "/directory" },
     Icon: Users,
-    gradient: "linear-gradient(120deg, #0a1f3c 0%, #1B3A66 55%, #2563a8 100%)",
-    glow: "rgba(91,160,255,0.45)",
+    gradient: "linear-gradient(125deg, rgba(120,22,16,0.66) 0%, rgba(234,67,53,0.48) 100%)",
+    glow: "rgba(255,95,82,0.42)",
   },
   {
     key: "stats",
@@ -24,8 +24,8 @@ const SLIDES = [
       { label: "Founders",  value: stats.founders,                     Icon: Rocket },
     ],
     Icon: Globe,
-    gradient: "linear-gradient(120deg, #0c2a22 0%, #165740 55%, #2E7D5B 100%)",
-    glow: "rgba(86,214,160,0.4)",
+    gradient: "linear-gradient(125deg, rgba(12,32,72,0.66) 0%, rgba(66,133,244,0.48) 100%)",
+    glow: "rgba(120,170,255,0.45)",
   },
   {
     key: "spotlight",
@@ -33,8 +33,8 @@ const SLIDES = [
     subtitle: "Co-Founder & CEO of TechVentures India, CSE '14 — building the future of EdTech for millions of students.",
     cta: { label: "Read the story", to: "/profile/1" },
     Icon: Award,
-    gradient: "linear-gradient(120deg, #3a2410 0%, #92560f 55%, #C2772E 100%)",
-    glow: "rgba(255,180,90,0.42)",
+    gradient: "linear-gradient(125deg, rgba(74,52,6,0.72) 0%, rgba(251,188,5,0.42) 100%)",
+    glow: "rgba(255,210,80,0.42)",
   },
   {
     key: "opportunities",
@@ -42,8 +42,8 @@ const SLIDES = [
     subtitle: "Internships, referrals and resources shared directly by seniors who've been exactly where you are.",
     cta: { label: "Browse Placements", to: "/placements" },
     Icon: Rocket,
-    gradient: "linear-gradient(120deg, #1a1340 0%, #3b2b86 55%, #5b46c9 100%)",
-    glow: "rgba(150,130,255,0.42)",
+    gradient: "linear-gradient(125deg, rgba(10,52,30,0.66) 0%, rgba(52,168,83,0.46) 100%)",
+    glow: "rgba(90,222,140,0.42)",
   },
 ];
 
@@ -95,6 +95,8 @@ export default function HeroSlideshow() {
               height: "100%",
               position: "relative",
               background: s.gradient,
+              WebkitBackdropFilter: "blur(14px) saturate(150%)",
+              backdropFilter: "blur(14px) saturate(150%)",
               overflow: "hidden",
             }}>
               {/* Decorative glow */}

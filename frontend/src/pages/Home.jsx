@@ -257,31 +257,12 @@ export default function Home() {
 
           {/* Main Feed Column */}
           <div style={{ display: "flex", flexDirection: "column", gap: 28, minWidth: 0 }}>
-            {/* Featured story */}
-            {featured && (
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 16 }}>
-                  <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 9, background: "rgba(194,119,46,0.12)", flexShrink: 0 }}>
-                    <Sparkles style={{ width: 18, height: 18, color: "var(--amber)" }} />
-                  </span>
-                  <h2 style={{ fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic", fontSize: 29, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.03em" }}>
-                    Featured Story
-                  </h2>
-                </div>
-                {loading ? <NewsCardSkeleton /> : <NewsCard item={featured} large />}
-              </div>
-            )}
 
             {/* Recent Updates section */}
-            <div style={{ borderTop: "1px solid var(--rule)", marginTop: 16, paddingTop: 40 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 18 }}>
-                <span style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 34, height: 34, borderRadius: 9, background: "rgba(27,58,102,0.10)", flexShrink: 0 }}>
-                  <TrendingUp style={{ width: 18, height: 18, color: "var(--blue)" }} />
-                </span>
-                <h2 style={{ fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic", fontSize: 29, fontWeight: 500, color: "var(--ink)", margin: 0, letterSpacing: "-0.03em" }}>
-                  Recent Updates
-                </h2>
-              </div>
+            <div>
+              <h2 style={{ fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 64px)", fontWeight: 600, color: "var(--ink)",marginTop: "clamp(50px, 16vh, 70px)", marginBottom: "clamp(50px, 16vh, 70px)", letterSpacing: "-0.03em", textAlign: "center" }}>
+                Recent Updates
+              </h2>
 
               {/* News grid */}
               {loading ? (
@@ -290,7 +271,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {rest.map(item => <NewsCard key={item.id} item={item} />)}
+                  {news.map(item => <NewsCard key={item.id} item={item} />)}
                 </div>
               )}
             </div>
@@ -299,33 +280,27 @@ export default function Home() {
 
         {/* CTA Section for logged-out users */}
         {!user && (
-          <div style={{
-            marginTop: 48,
-            padding: "32px",
-            background: "linear-gradient(135deg, var(--blue) 0%, #0d2a52 100%)",
-            borderRadius: "var(--radius-card)",
-            textAlign: "center",
-            color: "#fff",
-          }}>
-            <h2 style={{ ...serif, fontSize: 20, fontWeight: 600, margin: "0 0 8px" }}>
-              Join the Network
+          <div style={{ textAlign: "center", padding: "clamp(60px, 12vh, 120px) 24px clamp(40px, 8vh, 80px)" }}>
+            <h2 style={{
+              fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic",
+              fontSize: "clamp(40px, 5.5vw, 64px)", fontWeight: 600, color: "var(--ink)",
+              margin: "0 0 16px", letterSpacing: "-0.03em", lineHeight: 1.1,
+            }}>
+              Join the Network.
             </h2>
-            <p style={{ fontSize: 14, margin: "0 0 16px", opacity: 0.9 }}>
-              Sign up to connect with alumni, access resources, and discover opportunities
+            <p style={{ fontSize: "clamp(15px, 1.6vw, 18px)", color: "var(--sub)", margin: "0 0 32px", lineHeight: 1.6 }}>
+              Connect with alumni, access resources, and discover opportunities.
             </p>
             <Link to="/login" className="btn-premium" style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "10px 20px",
-              background: "#fff",
-              color: "var(--blue)",
+              display: "inline-flex", alignItems: "center", justifyContent: "center",
+              padding: "16px 44px",
+              background: "var(--ink)", color: "var(--paper)",
               textDecoration: "none",
-              borderRadius: 4,
-              fontWeight: 600,
-              fontSize: 13,
+              borderRadius: 999,
+              fontFamily: '"Source Serif 4", Georgia, serif', fontStyle: "italic",
+              fontWeight: 600, fontSize: 22,
             }}>
-              Sign Up <ArrowRight style={{ width: 14, height: 14 }} />
+              Sign Up
             </Link>
           </div>
         )}
