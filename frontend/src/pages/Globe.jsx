@@ -233,7 +233,7 @@ export default function GlobePage() {
   }, [filteredCities]);
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh", transition: "background 300ms" }}>
+    <div style={{ background: "transparent", minHeight: "100vh", transition: "background 300ms" }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }}>
 
         {/* Header */}

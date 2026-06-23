@@ -17,7 +17,7 @@ export default function Profile() {
   const handleLogout = () => { logout(); navigate("/login"); };
 
   if (!a) return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ background: "transparent", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <div className="dotted-grid" style={{ padding: "60px 80px", borderRadius: 3, border: "1px solid var(--rule)", textAlign: "center" }}>
         <p style={{ ...mono, fontSize: 12, color: "var(--sub)", letterSpacing: "0.08em" }}>RECORD NOT FOUND</p>
         <Link to="/directory" style={{ fontSize: 12, color: "var(--blue)", textDecoration: "none", marginTop: 12, display: "block" }}>← Return to directory</Link>
@@ -28,7 +28,7 @@ export default function Profile() {
   const badge = catBadge(a.category);
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
       {/* Back button */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "16px 28px" }}>
         <Link to="/directory" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--sub)", textDecoration: "none" }}>

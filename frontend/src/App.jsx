@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import FlowField from "./components/FlowField";
 import Home from "./pages/Home";
 import Directory from "./pages/Directory";
 import Profile from "./pages/Profile";
@@ -25,13 +26,16 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* Animated flow-field background, fixed behind everything */}
+        <FlowField />
+
         <Routes>
           {/* Login has its own layout (no Navbar) */}
           <Route path="/login" element={<Login />} />
 
           {/* All other pages share the Navbar + Footer layout */}
           <Route path="/*" element={
-            <div style={{ background: "var(--paper)", display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+            <div style={{ background: "transparent", position: "relative", zIndex: 1, display: "flex", flexDirection: "column", minHeight: "100vh" }}>
               <Navbar />
               <div style={{ flex: 1 }}>
                 <Routes>

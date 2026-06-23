@@ -240,7 +240,7 @@ export default function Home() {
   const rest = news.filter(n => !n.featured);
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
 
       {/* Founder Stories — pinned scrollytelling, right below the navbar */}
       <FounderStories />

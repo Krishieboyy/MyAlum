@@ -54,7 +54,7 @@ export default function Directory() {
   const inputStyle = { width: "100%", background: "var(--surface)", border: "1px solid var(--rule)", borderRadius: 3, padding: "6px 10px", fontSize: 12, color: "var(--ink)", outline: "none", fontFamily: "inherit" };
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
       <div className="flex flex-col md:flex-row gap-6" style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 28px" }}>
 
         {/* ── Filter sidebar ── */}

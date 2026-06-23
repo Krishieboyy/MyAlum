@@ -66,7 +66,7 @@ export default function Settings() {
   );
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
       <div style={{ maxWidth: 720, margin: "0 auto", padding: "36px 28px" }}>
 
         {/* Page header */}

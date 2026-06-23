@@ -9,7 +9,7 @@ const links = [
   { to: "/directory",  label: "Directory"  },
   { to: "/globe",      label: "Global Network" },
   { to: "/resources",  label: "Resources"  },
-  { to: "/placements", label: "Jobs" },
+  { to: "/placements", label: "Placements" },
 ];
 
 // ── Dark mode persistence ─────────────────────────────
@@ -89,13 +89,12 @@ export default function Navbar() {
           <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, color: "rgba(255,255,255,0.45)", letterSpacing: "0.1em", fontWeight: 600 }}>IITG</span>
         </Link>
 
-        {/* Nav links — centered between logo and profile */}
+        {/* Nav links */}
         <div style={{
           display: "flex",
           gap: 4,
           flex: 1,
           alignItems: "center",
-          justifyContent: "center",
           height: "100%",
           overflowX: "auto",
           whiteSpace: "nowrap",
@@ -124,7 +123,7 @@ export default function Navbar() {
         </div>
 
         {/* Right side */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
 
           {/* Dark mode toggle */}
           <button

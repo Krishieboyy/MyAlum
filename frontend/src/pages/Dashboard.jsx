@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ background: "transparent", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <p style={{ fontSize: 14, color: "var(--sub)" }}>Please log in to view your dashboard</p>
         </div>
@@ -68,7 +68,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
 
         {/* Header */}

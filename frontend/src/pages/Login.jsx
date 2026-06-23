@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ background: "transparent", minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", zIndex: 1 }}>
 
       {/* ── Navbar ── */}
       <Navbar />

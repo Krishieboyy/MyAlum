@@ -21,7 +21,7 @@ export default function Resources() {
   const filtered = active === "ALL" ? resources : resources.filter(r => r.type === active);
 
   return (
-    <div style={{ background: "var(--paper)", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px" }}>
 
         {/* ── Header ── */}
